@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('band_histories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('band_name');
+            $table->string('role')->nullable(); // instrumento que tocaba en esa banda
+            $table->year('year_start')->nullable();
+            $table->year('year_end')->nullable(); // null = actualmente en la banda
             $table->timestamps();
         });
     }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('instrument_user', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('instrument_id')->constrained()->onDelete('cascade');
+            $table->tinyInteger('level')->unsigned()->default(1); // nivel 1-5
             $table->timestamps();
         });
     }

@@ -26,6 +26,18 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'username'      => ['nullable', 'string', 'max:50', Rule::unique(User::class)->ignore($this->user()->id)],
+            'full_name'     => ['nullable', 'string', 'max:255'],
+            'city'          => ['nullable', 'string', 'max:100'],
+            'bio'           => ['nullable', 'string', 'max:1000'],
+            'age'           => ['nullable', 'integer', 'min:14', 'max:100'],
+            'general_level' => ['nullable', 'integer', 'min:1', 'max:5'],
+            'has_band'      => ['nullable', 'boolean'],
+            'photo'         => ['nullable', 'image', 'max:2048'],
+            'genres'        => ['nullable', 'array'],
+            'genres.*'      => ['exists:genres,id'],
+            'instruments'   => ['nullable', 'array'],
+            'instruments.*' => ['integer', 'min:1', 'max:5'],
         ];
     }
 }
