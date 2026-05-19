@@ -34,10 +34,10 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        $user->fill($request->safe()->except(['genres', 'instruments', 'photo']));
+        $user->fill($request->safe()->except(['genres', 'instruments', 'instrument_ids', 'photo']));
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
         // Subida de foto
@@ -53,9 +53,10 @@ class ProfileController extends Controller
         // Sincronizar géneros
         $user->genres()->sync($request->input('genres', []));
 
-        // Sincronizar instrumentos con nivel
+        // Sincronizar instrumentos con nivel (solo los que tienen checkbox marcado)
         $instruments = [];
-        foreach ($request->input('instruments', []) as $id => $level) {
+        foreach ($request->input('instrument_ids', []) as $id) {
+            $level = $request->input("instruments.$id", 1);
             $instruments[$id] = ['level' => $level];
         }
         $user->instruments()->sync($instruments);
