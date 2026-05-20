@@ -12,12 +12,14 @@ export default {
     theme: {
         extend: {
             colors: {
-            brand: {
-                cream:  '#FFEDCE',
-                peach:  '#FFC193',
-                coral:  '#FF8383',
-                red:    '#FF3737',
-            }
+                brand: {
+                    cream:  '#FFEDCE',
+                    peach:  '#FFC193',
+                    coral:  '#FF8383',
+                    red:    '#FF3737',
+                    dark:   '#1A0A0A',
+                    darker: '#2E1010',
+                }
             }
         }
     },
