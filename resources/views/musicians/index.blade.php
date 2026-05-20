@@ -7,6 +7,7 @@
         border-bottom: 1px solid rgba(255,193,147,.15);
     }
 
+<<<<<<< HEAD
     .hero-strip h1 {
         font-family: 'Playfair Display', serif;
         font-size: clamp(2rem, 4vw, 3.2rem);
@@ -14,6 +15,21 @@
         color: var(--beige);
         line-height: 1.1;
     }
+=======
+    <!-- Navbar -->
+    <nav class="flex justify-between items-center px-8 py-5 bg-gray-900 border-b border-gray-800">
+        <a href="{{ route('home') }}" class="text-2xl font-bold text-brand-red">BANDICALIA</a>
+        <div class="flex gap-4 items-center">
+            <a href="{{ route('profile.show') }}">Mi perfil</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="px-4 py-2 rounded-lg border border-gray-600 hover:border-red-400 hover:text-red-400 transition">
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </nav>
+>>>>>>> 6168ac00876a9c262a3dda060f6eb6ec4eeede3c
 
     .hero-strip h1 span {
         color: var(--orange);
