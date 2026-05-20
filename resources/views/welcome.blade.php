@@ -5,63 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bandicalia — Encuentra tu banda</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in-delay-1 { transition-delay: 0.1s; }
+        .fade-in-delay-2 { transition-delay: 0.25s; }
+        .fade-in-delay-3 { transition-delay: 0.4s; }
+    </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+<body class="bg-brand-cream text-gray-900 min-h-screen flex flex-col">
 
-    <!-- Navbar -->
-    <nav class="flex justify-between items-center px-8 py-5">
-        <span class="text-2xl font-bold text-indigo-400">🎸 Bandicalia</span>
+    <nav class="flex justify-between items-center px-8 py-5 bg-brand-coral border-b border-brand-red/20">
+        <span class="text-2xl font-bold text-white tracking-tight">BANDICALIA</span>
         <div class="flex gap-4">
-            <a href="{{ route('login') }}" class="px-4 py-2 rounded-lg border border-indigo-400 text-indigo-400 hover:bg-indigo-400 hover:text-white transition">
+            <a href="{{ route('login') }}" class="px-4 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-brand-coral transition">
                 Iniciar sesión
             </a>
-            <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white transition">
+            <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg bg-brand-red hover:bg-red-600 text-white transition">
                 Registrarse
             </a>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <main class="flex-1 flex flex-col items-center justify-center text-center px-6 py-20">
-        <h1 class="text-5xl font-extrabold mb-6 leading-tight">
+    <main class="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 bg-brand-cream">
+        <h1 class="fade-in text-5xl font-extrabold mb-6 leading-tight text-gray-900">
             Encuentra a los músicos<br>que necesitas
         </h1>
-        <p class="text-gray-400 text-xl max-w-xl mb-10">
+        <p class="fade-in fade-in-delay-1 text-gray-500 text-xl max-w-xl mb-10">
             Bandicalia es la plataforma para conectar músicos. Crea tu perfil, muestra tus instrumentos y géneros favoritos, y forma tu banda ideal.
         </p>
-        <div class="flex gap-4">
-            <a href="{{ route('register') }}" class="px-8 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-xl text-lg font-semibold transition">
+        <div class="fade-in fade-in-delay-2 flex gap-4">
+            <a href="{{ route('register') }}" class="px-8 py-3 bg-brand-red hover:bg-brand-coral rounded-xl text-lg font-semibold transition text-white">
                 Empieza gratis
             </a>
-            <a href="{{ route('login') }}" class="px-8 py-3 border border-gray-600 hover:border-indigo-400 rounded-xl text-lg font-semibold transition">
+            <a href="{{ route('login') }}" class="px-8 py-3 border border-brand-coral/50 hover:border-brand-coral text-brand-coral rounded-xl text-lg font-semibold transition">
                 Ya tengo cuenta
             </a>
         </div>
     </main>
 
-    <!-- Features -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 px-12 py-16 bg-gray-900">
-        <div class="text-center p-6">
-            <div class="text-4xl mb-4">🎵</div>
-            <h3 class="text-xl font-bold mb-2">Tu perfil musical</h3>
-            <p class="text-gray-400">Añade tus instrumentos con tu nivel, géneros favoritos y tu historial de bandas.</p>
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 px-12 py-16 bg-brand-peach/20">
+        <div class="fade-in fade-in-delay-1 text-center p-8 flex flex-col items-center">
+            <div class="mb-6">
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="8" width="56" height="56" rx="16" fill="#FF3737" opacity="0.12"/>
+                    <circle cx="36" cy="30" r="12" fill="#FF3737" opacity="0.9"/>
+                    <rect x="20" y="48" width="32" height="6" rx="3" fill="#FF3737" opacity="0.6"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-brand-red">Tu perfil musical</h3>
+            <p class="text-gray-600">Añade tus instrumentos con tu nivel, géneros favoritos y tu historial de bandas.</p>
         </div>
-        <div class="text-center p-6">
-            <div class="text-4xl mb-4">🔍</div>
-            <h3 class="text-xl font-bold mb-2">Busca músicos</h3>
-            <p class="text-gray-400">Filtra por instrumento, género musical o ciudad y encuentra al músico perfecto.</p>
+        <div class="fade-in fade-in-delay-2 text-center p-8 flex flex-col items-center">
+            <div class="mb-6">
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="8" width="56" height="56" rx="16" fill="#FF8383" opacity="0.12"/>
+                    <circle cx="33" cy="33" r="13" stroke="#FF8383" stroke-width="5" fill="none"/>
+                    <rect x="43" y="43" width="16" height="6" rx="3" fill="#FF8383" transform="rotate(45 43 43)"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-brand-red">Busca músicos</h3>
+            <p class="text-gray-600">Filtra por instrumento, género musical o ciudad y encuentra al músico perfecto.</p>
         </div>
-        <div class="text-center p-6">
-            <div class="text-4xl mb-4">🤝</div>
-            <h3 class="text-xl font-bold mb-2">Conecta y toca</h3>
-            <p class="text-gray-400">Contacta con otros músicos y empieza a construir tu banda.</p>
+        <div class="fade-in fade-in-delay-3 text-center p-8 flex flex-col items-center">
+            <div class="mb-6">
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="8" width="56" height="56" rx="16" fill="#FFC193" opacity="0.12"/>
+                    <circle cx="24" cy="36" r="10" fill="#FFC193" opacity="0.9"/>
+                    <circle cx="48" cy="36" r="10" fill="#FF8383" opacity="0.9"/>
+                    <ellipse cx="36" cy="36" rx="8" ry="10" fill="#FF3737" opacity="0.85"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-brand-red">Conecta y toca</h3>
+            <p class="text-gray-600">Contacta con otros músicos y empieza a construir tu banda.</p>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="text-center text-gray-600 py-6 text-sm">
+    <section class="px-12 py-16 bg-brand-cream">
+        <h2 class="fade-in text-3xl font-extrabold text-center text-gray-900 mb-12">¿Cómo funciona?</h2>
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-start gap-8 md:gap-0">
+
+            <div class="fade-in fade-in-delay-1 flex flex-col items-center text-center flex-1 px-6">
+                <div class="w-12 h-12 rounded-full bg-brand-red text-white text-xl font-bold flex items-center justify-center mb-4">1</div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Regístrate</h3>
+                <p class="text-gray-500 text-sm">Crea tu cuenta en segundos. Solo necesitas un email y un nombre de usuario.</p>
+            </div>
+
+            <div class="hidden md:flex items-center self-start mt-5 text-brand-peach text-3xl font-light select-none">›</div>
+
+            <div class="fade-in fade-in-delay-2 flex flex-col items-center text-center flex-1 px-6">
+                <div class="w-12 h-12 rounded-full bg-brand-coral text-white text-xl font-bold flex items-center justify-center mb-4">2</div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Crea tu perfil</h3>
+                <p class="text-gray-500 text-sm">Añade tus instrumentos, niveles, géneros favoritos y cuéntanos si buscas banda.</p>
+            </div>
+
+            <div class="hidden md:flex items-center self-start mt-5 text-brand-peach text-3xl font-light select-none">›</div>
+
+            <div class="fade-in fade-in-delay-3 flex flex-col items-center text-center flex-1 px-6">
+                <div class="w-12 h-12 rounded-full bg-brand-peach text-white text-xl font-bold flex items-center justify-center mb-4">3</div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Encuentra tu banda</h3>
+                <p class="text-gray-500 text-sm">Busca músicos por ciudad, instrumento o género y contacta con quien encaje contigo.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="text-center text-gray-400 py-6 text-sm bg-brand-cream border-t border-brand-peach/30">
         © 2026 Bandicalia — TFG
     </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
 
 </body>
 </html>
