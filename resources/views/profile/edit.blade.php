@@ -10,7 +10,7 @@
 
     <!-- Navbar -->
     <nav class="flex justify-between items-center px-8 py-5 bg-gray-900 border-b border-gray-800">
-        <a href="{{ route('home') }}" class="text-2xl font-bold text-indigo-400">🎸 Bandicalia</a>
+        <a href="{{ route('home') }}" class="text-2xl font-bold text-brand-red">BANDICALIA</a>
         <div class="flex gap-4 items-center">
             <a href="{{ route('profile.edit') }}" class="text-indigo-400 font-semibold">Mi perfil</a>
             <form method="POST" action="{{ route('logout') }}">
