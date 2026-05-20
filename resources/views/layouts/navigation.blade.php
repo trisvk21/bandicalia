@@ -1,100 +1,184 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
+<style>
+    :root {
+        --beige:  #FFEDCE;
+        --orange: #FFC193;
+        --salmon: #FF8383;
+        --red:    #FF3737;
+        --dark:   #1a0a00;
+        --mid:    #2e1500;
+        --muted:  #a0704a;
+    }
+
+    .bandi-nav {
+        background: var(--dark);
+        border-bottom: 2px solid var(--red);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .bandi-nav-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 64px;
+    }
+
+    .bandi-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: var(--orange);
+        text-decoration: none;
+        letter-spacing: -0.02em;
+        transition: color .2s;
+    }
+    .bandi-logo:hover { color: var(--salmon); }
+
+    .bandi-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .bandi-nav-link {
+        color: rgba(255,237,206,.7);
+        text-decoration: none;
+        font-size: .9rem;
+        font-weight: 500;
+        transition: color .2s;
+    }
+    .bandi-nav-link:hover,
+    .bandi-nav-link.active { color: var(--orange); }
+
+    .bandi-nav-divider {
+        width: 1px;
+        height: 18px;
+        background: rgba(255,193,147,.2);
+    }
+
+    .bandi-user {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        color: rgba(255,237,206,.85);
+        font-size: .88rem;
+        font-weight: 500;
+    }
+
+    .bandi-user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--orange), var(--red));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Playfair Display', serif;
+        font-size: .9rem;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .bandi-btn-logout {
+        padding: .4rem 1rem;
+        border-radius: 8px;
+        border: 1.5px solid var(--salmon);
+        color: var(--salmon);
+        background: transparent;
+        font-family: 'DM Sans', sans-serif;
+        font-size: .82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .2s, color .2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .bandi-btn-logout:hover {
+        background: var(--salmon);
+        color: var(--dark);
+    }
+
+    /* Mobile */
+    .bandi-hamburger {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--beige);
+        padding: .25rem;
+    }
+
+    .bandi-mobile-menu {
+        display: none;
+        background: var(--mid);
+        border-top: 1px solid rgba(255,131,131,.15);
+        padding: 1rem 2rem;
+        flex-direction: column;
+        gap: .75rem;
+    }
+    .bandi-mobile-menu.open { display: flex; }
+
+    @media (max-width: 640px) {
+        .bandi-nav-links { display: none; }
+        .bandi-hamburger { display: block; }
+    }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<nav class="bandi-nav" x-data="{ open: false }">
+    <div class="bandi-nav-inner">
+        <!-- Logo -->
+        <a href="{{ route('home') }}" class="bandi-logo">BANDICALIA</a>
+
+        <!-- Desktop links -->
+        <div class="bandi-nav-links">
+            <a href="{{ route('home') }}" class="bandi-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                Músicos
+            </a>
+            <a href="{{ route('profile.edit') }}" class="bandi-nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+                Mi perfil
+            </a>
+
+            <div class="bandi-nav-divider"></div>
+
+            <div class="bandi-user">
+                <div class="bandi-user-avatar">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+                {{ Auth::user()->name }}
             </div>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="bandi-btn-logout">Salir</button>
+            </form>
         </div>
+
+        <!-- Hamburger (mobile) -->
+        <button class="bandi-hamburger" @click="open = !open" aria-label="Menú">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                <path x-show="open" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
+    <!-- Mobile menu -->
+    <div class="bandi-mobile-menu" :class="{ 'open': open }">
+        <a href="{{ route('home') }}" class="bandi-nav-link">Músicos</a>
+        <a href="{{ route('profile.edit') }}" class="bandi-nav-link">Mi perfil</a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="bandi-btn-logout">Cerrar sesión</button>
+        </form>
     </div>
 </nav>
