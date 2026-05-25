@@ -46,6 +46,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/ads/create', [AdController::class, 'create'])->name('ads.create');
     Route::post('/ads', [AdController::class, 'store'])->name('ads.store');
     Route::delete('/ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+
+    //Onboarding
+    Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'show'])->name('onboarding.show');
+    Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
 });
 
 
