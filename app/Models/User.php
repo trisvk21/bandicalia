@@ -24,6 +24,9 @@ class User extends Authenticatable
         'bio',
         'age',
         'has_band',
+        'account_type',
+        'soundcloud_url',
+        'spotify_url',
     ];
 
     protected $hidden = [
@@ -79,4 +82,9 @@ public function followStatus(User $user): ?string
     $follow = $this->following()->where('following_id', $user->id)->first();
     return $follow ? $follow->pivot->status : null;
 }
+    
+    public function ads()
+    {
+        return $this->hasMany(Ad::class);
+    }
 }

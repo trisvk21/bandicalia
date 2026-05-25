@@ -8,9 +8,12 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
     ],
-
     theme: {
         extend: {
+            fontFamily: {
+                sans:  ['DM Sans', ...defaultTheme.fontFamily.sans],
+                serif: ['Playfair Display', ...defaultTheme.fontFamily.serif],
+            },
             colors: {
                 brand: {
                     cream:  '#FFEDCE',
@@ -25,6 +28,5 @@ export default {
             }
         }
     },
-
     plugins: [forms],
 };

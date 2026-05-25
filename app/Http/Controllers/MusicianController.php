@@ -5,52 +5,77 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Genre;
 use App\Models\Instrument;
+use App\Models\Ad;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class MusicianController extends Controller
 {
-    /**
-     * Página principal de búsqueda de músicos.
-     */
     public function index(Request $request): View
     {
-        $query = User::with('genres', 'instruments')
-            ->whereNotNull('username');
+        $tab = $request->input('tab', 'musicians');
 
-        // Filtro por usuario o nombre
+        // Query músicos
+        $musiciansQuery = User::with('genres', 'instruments')
+            ->whereNotNull('username')
+            ->where('account_type', 'musician');
+
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
+            $musiciansQuery->where(function ($q) use ($search) {
                 $q->where('username', 'like', "%$search%")
                   ->orWhere('full_name', 'like', "%$search%")
                   ->orWhere('name', 'like', "%$search%");
             });
         }
 
-        // Filtro por ciudad
         if ($request->filled('city')) {
-            $query->where('city', 'like', '%' . $request->input('city') . '%');
+            $musiciansQuery->where('city', 'like', '%' . $request->input('city') . '%');
         }
 
-        // Filtro por género musical
         if ($request->filled('genre')) {
-            $query->whereHas('genres', function ($q) use ($request) {
+            $musiciansQuery->whereHas('genres', function ($q) use ($request) {
                 $q->where('genres.id', $request->input('genre'));
             });
         }
 
-        // Filtro por instrumento
         if ($request->filled('instrument')) {
-            $query->whereHas('instruments', function ($q) use ($request) {
+            $musiciansQuery->whereHas('instruments', function ($q) use ($request) {
                 $q->where('instruments.id', $request->input('instrument'));
             });
         }
 
-        $musicians = $query->paginate(12);
-        $genres     = Genre::orderBy('name')->get();
+        $musicians = $musiciansQuery->paginate(12, ['*'], 'musicians_page');
+
+        // Query bandas
+        $bandsQuery = User::with('genres', 'ads')
+            ->whereNotNull('username')
+            ->where('account_type', 'band');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $bandsQuery->where(function ($q) use ($search) {
+                $q->where('username', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                  ->orWhere('name', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('city')) {
+            $bandsQuery->where('city', 'like', '%' . $request->input('city') . '%');
+        }
+
+        if ($request->filled('genre')) {
+            $bandsQuery->whereHas('genres', function ($q) use ($request) {
+                $q->where('genres.id', $request->input('genre'));
+            });
+        }
+
+        $bands = $bandsQuery->paginate(12, ['*'], 'bands_page');
+
+        $genres      = Genre::orderBy('name')->get();
         $instruments = Instrument::orderBy('name')->get();
 
-        return view('musicians.index', compact('musicians', 'genres', 'instruments'));
+        return view('musicians.index', compact('musicians', 'bands', 'genres', 'instruments', 'tab'));
     }
 }

@@ -102,6 +102,35 @@
                 </div>
             </div>
 
+            <!-- Redes sociales -->
+            <div class="bg-gray-900 rounded-2xl p-6 flex flex-col gap-4">
+                <h2 class="text-xl font-semibold text-indigo-400">Tipo de cuenta y redes</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-gray-400 mb-1 block">Tipo de cuenta</label>
+                        <select name="account_type" class="w-full bg-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="musician" {{ old('account_type', $user->account_type) == 'musician' ? 'selected' : '' }}>🎸 Músico</option>
+                        <option value="band" {{ old('account_type', $user->account_type) == 'band' ? 'selected' : '' }}>🎵 Banda</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-400 mb-1 block">SoundCloud URL</label>
+                        <input type="url" name="soundcloud_url" value="{{ old('soundcloud_url', $user->soundcloud_url) }}"
+                        placeholder="https://soundcloud.com/tu-perfil"
+                        class="w-full bg-gray-800 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @error('soundcloud_url') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-400 mb-1 block">Spotify URL</label>
+                        <input type="url" name="spotify_url" value="{{ old('spotify_url', $user->spotify_url) }}"
+                        placeholder="https://open.spotify.com/artist/..."
+                        class="w-full bg-gray-800 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @error('spotify_url') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+            </div>
+
             <!-- Géneros -->
             <div class="bg-white border border-peach rounded-2xl p-6 flex flex-col gap-4 shadow-sm">
                 <h2 class="text-xl font-semibold text-red">Géneros musicales</h2>
@@ -146,6 +175,42 @@
 
             <button type="submit"
                 class="bg-red hover:bg-coral text-cream rounded-xl px-8 py-3 font-semibold text-lg transition">
+            <!-- Anuncios (solo bandas) -->
+            <div class="bg-gray-900 rounded-2xl p-6 flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-indigo-400">Anuncios</h2>
+                    @if(auth()->user()->account_type === 'band')
+                        <a href="{{ route('ads.create') }}" class="bg-indigo-500 hover:bg-indigo-600 rounded-lg px-4 py-2 text-sm font-semibold transition">
+                        + Nuevo anuncio
+                        </a>
+                    @endif
+                </div>
+
+                @if($user->ads->isEmpty())
+                    <p class="text-gray-500 text-sm">No hay anuncios publicados todavía.</p>
+                @else
+                    <div class="flex flex-col gap-4">
+                        @foreach($user->ads as $ad)
+                        <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-start gap-4">
+                            <div>
+                                <p class="font-semibold text-white">{{ $ad->title }}</p>
+                                <p class="text-gray-400 text-sm mt-1">{{ $ad->body }}</p>
+                                <p class="text-gray-600 text-xs mt-2">{{ $ad->created_at->diffForHumans() }}</p>
+                            </div>
+                            <form method="POST" action="{{ route('ads.destroy', $ad) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-400 hover:text-red-300 text-sm transition">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 rounded-xl px-8 py-3 font-semibold text-lg transition">
                 Guardar cambios
             </button>
         </form>

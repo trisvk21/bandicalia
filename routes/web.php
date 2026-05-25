@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MusicianController;
+use App\Http\Controllers\AdController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FollowController;
 
@@ -9,6 +11,23 @@ use App\Http\Controllers\FollowController;
 Route::get('/', function () {
     return view('welcome');
 })->name('landing');
+
+// Elección de tipo de cuenta
+Route::get('/register', function () {
+    return view('auth.choose-type');
+})->name('register');
+
+Route::get('/register/musician', [RegisteredUserController::class, 'create'])
+    ->name('register.musician');
+
+Route::get('/register/band', [RegisteredUserController::class, 'createBand'])
+    ->name('register.band');
+
+Route::post('/register/musician', [RegisteredUserController::class, 'store'])
+    ->name('register.musician.store');
+
+Route::post('/register/band', [RegisteredUserController::class, 'storeBand'])
+    ->name('register.band.store');
 
 // Buscador (requiere login)
 Route::get('/home', [MusicianController::class, 'index'])
@@ -22,9 +41,11 @@ Route::get('/dashboard', function () {
 
 // Perfil propio (requiere login)
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/ads/create', [AdController::class, 'create'])->name('ads.create');
+    Route::post('/ads', [AdController::class, 'store'])->name('ads.store');
+    Route::delete('/ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
 });
 
 
@@ -41,5 +62,7 @@ Route::middleware('auth')->group(function () {
 // Ver perfil público de un músico
 Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('musician.show');
 
+// Ver perfil público de un músico o banda
+Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('profile.show');
 
 require __DIR__.'/auth.php';
