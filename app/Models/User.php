@@ -24,6 +24,9 @@ class User extends Authenticatable
         'bio',
         'age',
         'has_band',
+        'account_type',
+        'soundcloud_url',
+        'spotify_url',
     ];
 
     protected $hidden = [
@@ -52,5 +55,10 @@ class User extends Authenticatable
     public function bandHistories()
     {
         return $this->hasMany(BandHistory::class);
+    }
+    
+    public function ads()
+    {
+        return $this->hasMany(Ad::class);
     }
 }

@@ -38,6 +38,9 @@ class ProfileUpdateRequest extends FormRequest
             'genres.*'      => ['exists:genres,id'],
             'instruments'   => ['nullable', 'array'],
             'instruments.*' => ['integer', 'min:1', 'max:5'],
+            'account_type'   => ['nullable', 'in:musician,band'],
+            'soundcloud_url' => ['nullable', 'url', 'max:255'],
+            'spotify_url'    => ['nullable', 'url', 'max:255'],
         ];
     }
 }
