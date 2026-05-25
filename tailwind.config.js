@@ -17,8 +17,10 @@ export default {
                     peach:  '#FFC193',
                     coral:  '#FF8383',
                     red:    '#FF3737',
-                    dark:   '#1A0A0A',
-                    darker: '#2E1010',
+                    dark:   '#1A0A00',
+                    darker: '#2E1500',
+                    text:   '#3D1F00',
+                    muted:  '#A0704A',
                 }
             }
         }

@@ -11,12 +11,24 @@ use App\Models\Instrument;
 class ProfileController extends Controller
 {
     // Vista que MUESTRA los datos del perfil
-    public function show()
-    {
+    public function show(?string $username = null)
+{
+    // Si no hay username, es mi propio perfil
+    if ($username) {
+        $user = User::where('username', $username)->firstOrFail();
+    } else {
         $user = Auth::user();
-        $user->load('genres', 'instruments');
-        return view('profile.show', compact('user'));
     }
+
+    $user->load('genres', 'instruments');
+    $me = Auth::user();
+
+    $followStatus = ($me && $me->id !== $user->id)
+        ? $me->followStatus($user)
+        : null;
+
+    return view('profile.show', compact('user', 'followStatus'));
+}
 
     // Vista de edición con el formulario
     public function edit()

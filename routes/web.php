@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MusicianController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FollowController;
 
 // Landing page (pública)
 Route::get('/', function () {
@@ -26,7 +27,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
 });
 
+
+Route::middleware('auth')->group(function () {
+    // ... tus rutas existentes ...
+
+    Route::post('/follow/{user}',   [FollowController::class, 'send'])->name('follow.send');
+    Route::post('/unfollow/{user}', [FollowController::class, 'unfollow'])->name('follow.unfollow');
+    Route::post('/follow/{user}/accept', [FollowController::class, 'accept'])->name('follow.accept');
+    Route::get('/following',        [FollowController::class, 'following'])->name('follow.following');
+    Route::get('/follow/requests',  [FollowController::class, 'requests'])->name('follow.requests');
+});
+
 // Ver perfil público de un músico
-Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('musician.show');
+
 
 require __DIR__.'/auth.php';

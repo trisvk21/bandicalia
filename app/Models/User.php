@@ -53,4 +53,30 @@ class User extends Authenticatable
     {
         return $this->hasMany(BandHistory::class);
     }
+
+    public function following()
+{
+    return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id')
+                ->withPivot('status')
+                ->withTimestamps();
+}
+
+public function followers()
+{
+    return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id')
+                ->withPivot('status')
+                ->withTimestamps();
+}
+
+// Helpers útiles
+public function isFollowing(User $user): bool
+{
+    return $this->following()->where('following_id', $user->id)->exists();
+}
+
+public function followStatus(User $user): ?string
+{
+    $follow = $this->following()->where('following_id', $user->id)->first();
+    return $follow ? $follow->pivot->status : null;
+}
 }
