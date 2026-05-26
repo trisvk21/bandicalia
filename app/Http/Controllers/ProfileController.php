@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Genre;
 use App\Models\Instrument;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
