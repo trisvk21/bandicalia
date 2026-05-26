@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect(route('dashboard'));
+        return redirect()->route('onboarding.show');
     }
 
     // Formulario registro banda
@@ -72,6 +72,6 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect(route('dashboard'));
+        return redirect()->route('onboarding.show');
     }
 }
