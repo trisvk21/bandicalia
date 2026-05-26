@@ -61,13 +61,38 @@
                             @endif
                         </div>
                         @auth
-                            @if(auth()->id() === $user->id)
-                                <a href="{{ route('profile.edit') }}"
-                                   class="px-5 py-2 bg-brand hover:bg-coral text-white text-sm font-semibold rounded-xl transition">
-                                    Editar perfil
-                                </a>
-                            @endif
-                        @endauth
+    @if(auth()->id() === $user->id)
+        {{-- PERFIL PROPIO: botón editar --}}
+        <a href="{{ route('profile.edit') }}"
+           class="px-5 py-2 bg-brand hover:bg-coral text-white text-sm font-semibold rounded-xl transition">
+            Editar perfil
+        </a>
+    @else
+        {{-- PERFIL AJENO: botón seguir --}}
+        @if($followStatus === 'accepted')
+            <form method="POST" action="{{ route('follow.unfollow', $user) }}">
+                @csrf
+                <button class="px-5 py-2 rounded-xl border border-white/20 text-white/60 hover:border-coral hover:text-coral text-sm transition">
+                    ✓ Siguiendo
+                </button>
+            </form>
+        @elseif($followStatus === 'pending')
+            <form method="POST" action="{{ route('follow.unfollow', $user) }}">
+                @csrf
+                <button class="px-5 py-2 rounded-xl border border-white/20 text-white/40 text-sm">
+                    Solicitud enviada
+                </button>
+            </form>
+        @else
+            <form method="POST" action="{{ route('follow.send', $user) }}">
+                @csrf
+                <button class="px-5 py-2 bg-brand hover:bg-coral text-white text-sm font-semibold rounded-xl transition">
+                    + Seguir
+                </button>
+            </form>
+        @endif
+    @endif
+@endauth
                     </div>
 
                     <div class="flex flex-wrap gap-4 mt-4 text-sm text-white/50">
@@ -151,6 +176,40 @@
             @endif
 
         </div>
+        {{-- Lista de seguidos: solo visible en tu propio perfil --}}
+@auth
+    @if(auth()->id() === $user->id)
+        @php $following = $user->following()->wherePivot('status', 'accepted')->get(); @endphp
+        <div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
+            <h2 class="font-serif text-lg font-bold text-cream mb-4">
+                Músicos que sigues ({{ $following->count() }})
+            </h2>
+            @if($following->isEmpty())
+                <p class="text-white/40 text-sm">Aún no sigues a nadie.</p>
+            @else
+                <div class="flex flex-col gap-3">
+                    @foreach($following as $musician)
+                        <a href="{{ route('musician.show', $musician->username) }}"
+                           class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
+                            @if($musician->photo)
+                                <img src="{{ Storage::url($musician->photo) }}"
+                                     class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                            @else
+                                <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+                            @endif
+                            <div>
+                                <p class="text-cream text-sm font-semibold">{{ $musician->username }}</p>
+                                @if($musician->city)
+                                    <p class="text-white/40 text-xs">{{ $musician->city }}</p>
+                                @endif
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    @endif
+@endauth
     </main>
 
     <footer class="text-center text-white/20 py-6 text-sm bg-dark border-t border-white/5">
