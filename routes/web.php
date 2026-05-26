@@ -29,6 +29,8 @@ Route::post('/register/musician', [RegisteredUserController::class, 'store'])
 Route::post('/register/band', [RegisteredUserController::class, 'storeBand'])
     ->name('register.band.store');
 
+Route::post('/follow/{user}/reject', [FollowController::class, 'reject'])->name('follow.reject');
+
 // Buscador (requiere login)
 Route::get('/home', [MusicianController::class, 'index'])
     ->middleware(['auth'])
