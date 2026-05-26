@@ -81,7 +81,7 @@ class ProfileController extends Controller
         }
         $user->instruments()->sync($instrumentsSync);
 
-        return redirect()->route('profile.show')
-            ->with('status', 'profile-updated');
+        return redirect()->route('profile.show', Auth::user()->username)
+        ->with('status', 'profile-updated');
     }
 }
