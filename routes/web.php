@@ -48,6 +48,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
 });
 
+// Perfil propio (sin parámetro)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+// Perfil público (con username) — nombre DIFERENTE
+Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('musician.show');
+
 
 Route::middleware('auth')->group(function () {
     // ... tus rutas existentes ...
@@ -59,8 +69,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/follow/requests',  [FollowController::class, 'requests'])->name('follow.requests');
 });
 
-// Ver perfil público de un músico
-Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('musician.show');
 
 // Ver perfil público de un músico o banda
 Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('profile.show');
