@@ -22,9 +22,9 @@
         </div>
     </nav>
 
-    <main class="flex-1 px-8 py-10 max-w-2xl mx-auto w-full">
+    <main class="flex-1 max-w-4xl mx-auto w-full px-6 py-10">
 
-        <h1 class="text-3xl font-bold mb-8">Publicar anuncio</h1>
+        <h1 class="font-serif text-3xl font-extrabold text-cream">Publicar anuncio</h1>
 
         @if($errors->any())
             <div class="bg-red-900 text-red-200 px-4 py-3 rounded-lg mb-6">
@@ -36,7 +36,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('ads.store') }}" class="bg-gray-900 rounded-2xl p-6 flex flex-col gap-6">
+        <form method="POST" action="{{ route('ads.store') }}" class="bg-dark rounded-2xl p-6 flex flex-col gap-6">
             @csrf
 
             <div>
