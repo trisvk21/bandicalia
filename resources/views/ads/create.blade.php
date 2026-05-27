@@ -54,7 +54,7 @@
             </div>
 
             <div class="flex gap-4">
-                <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 rounded-xl px-8 py-3 font-semibold transition">
+                <button type="submit" class="flex-1 py-3 bg-brand hover:bg-coral text-white font-semibold rounded-xl transition">
                     Publicar anuncio
                 </button>
                 <a href="{{ route('profile.edit') }}" class="border border-gray-600 hover:border-gray-400 rounded-xl px-8 py-3 font-semibold transition">
