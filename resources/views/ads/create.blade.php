@@ -50,7 +50,7 @@
                 <label class="text-sm text-gray-400 mb-1 block">Descripción *</label>
                 <textarea name="body" rows="6"
                     placeholder="Describe lo que buscáis, vuestro estilo, con qué frecuencia ensayáis..."
-                    class="w-full bg-gray-800 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('body') }}</textarea>
+                    class="w-full bg-darker rounded-xl px-4 py-3 text-cream placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-white/10">{{ old('body') }}</textarea>
             </div>
 
             <div class="flex gap-4">
