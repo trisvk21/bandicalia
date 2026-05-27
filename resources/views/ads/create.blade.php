@@ -43,7 +43,7 @@
                 <label class="text-sm text-gray-400 mb-1 block">Título del anuncio *</label>
                 <input type="text" name="title" value="{{ old('title') }}"
                     placeholder="Ej: Buscamos bajista para banda de rock en Madrid"
-                    class="w-full bg-gray-800 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    class="w-full bg-darker rounded-xl px-4 py-3 text-cream placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-white/10">
             </div>
 
             <div>
