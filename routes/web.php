@@ -29,6 +29,8 @@ Route::post('/register/musician', [RegisteredUserController::class, 'store'])
 Route::post('/register/band', [RegisteredUserController::class, 'storeBand'])
     ->name('register.band.store');
 
+Route::post('/follow/{user}/reject', [FollowController::class, 'reject'])->name('follow.reject');
+
 // Buscador (requiere login)
 Route::get('/home', [MusicianController::class, 'index'])
     ->middleware(['auth'])
@@ -52,7 +54,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
 });
 
-
 Route::middleware('auth')->group(function () {
     // ... tus rutas existentes ...
 
@@ -62,9 +63,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/following',        [FollowController::class, 'following'])->name('follow.following');
     Route::get('/follow/requests',  [FollowController::class, 'requests'])->name('follow.requests');
 });
-
-// Ver perfil público de un músico
-Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('musician.show');
 
 // Ver perfil público de un músico o banda
 Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('profile.show');

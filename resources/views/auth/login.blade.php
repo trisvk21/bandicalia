@@ -1,26 +1,44 @@
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <h2 class="font-serif text-2xl font-bold text-cream mb-6">Bienvenido de nuevo</h2>
+
+    <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5">
         @csrf
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <!-- Email -->
+        <div class="flex flex-col gap-1">
+            <label for="email" class="text-sm font-semibold text-peach">Email</label>
+            <input
+                id="email"
+                type="email"
+                name="email"
+                value="{{ old('email') }}"
+                required autofocus autocomplete="username"
+                class="bg-darker border border-peach/20 rounded-xl px-4 py-3 text-cream placeholder-white/20 text-sm focus:outline-none focus:border-peach transition"
+                placeholder="tu@email.com"
+            >
+            @error('email')
+                <p class="text-brand text-xs mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <!-- Password -->
+        <div class="flex flex-col gap-1">
+            <label for="password" class="text-sm font-semibold text-peach">Contraseña</label>
             <div class="relative">
-                <x-text-input id="password" class="block mt-1 w-full pr-10"
-                                type="password"
-                                name="password"
-                                required autocomplete="current-password" />
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    required autocomplete="current-password"
+                    class="w-full bg-darker border border-peach/20 rounded-xl px-4 py-3 pr-11 text-cream placeholder-white/20 text-sm focus:outline-none focus:border-peach transition"
+                    placeholder="••••••••"
+                >
                 <button
                     type="button"
                     onclick="togglePassword()"
-                    class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-brand-coral transition mt-1"
+                    class="absolute inset-y-0 right-3 flex items-center text-white/30 hover:text-peach transition"
                     tabindex="-1"
                 >
                     <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -32,36 +50,37 @@
                     </svg>
                 </button>
             </div>
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            @error('password')
+                <p class="text-brand text-xs mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-brand-red shadow-sm focus:ring-brand-coral" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+        <!-- Remember + Forgot -->
+        <div class="flex items-center justify-between">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="remember" class="rounded border-peach/30 bg-darker text-brand focus:ring-coral">
+                <span class="text-sm text-white/50">Recuérdame</span>
             </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-brand-coral transition" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                <a href="{{ route('password.request') }}" class="text-sm text-white/40 hover:text-peach transition">
+                    ¿Olvidaste tu contraseña?
                 </a>
             @endif
-
-            <button type="submit" class="ms-3 px-5 py-2 bg-brand-red hover:bg-brand-coral text-white text-sm font-semibold rounded-lg transition">
-                {{ __('Log in') }}
-            </button>
         </div>
 
-        <div class="mt-6 text-center border-t border-gray-100 pt-4">
-            <p class="text-sm text-gray-500">
-                ¿No tienes cuenta?
-                <a href="{{ route('register') }}" class="text-brand-red font-semibold hover:text-brand-coral transition">
-                    Regístrate
-                </a>
-            </p>
-        </div>
+        <!-- Submit -->
+        <button type="submit" class="w-full bg-brand hover:bg-coral text-white font-bold py-3 rounded-xl transition text-sm">
+            Iniciar sesión
+        </button>
+
+        <!-- Registro -->
+        <p class="text-center text-sm text-white/40 border-t border-white/10 pt-4">
+            ¿No tienes cuenta?
+            <a href="{{ route('register') }}" class="text-peach font-semibold hover:text-coral transition">
+                Regístrate
+            </a>
+        </p>
+
     </form>
 
     <script>

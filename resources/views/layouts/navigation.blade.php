@@ -144,7 +144,7 @@
             <a href="{{ route('home') }}" class="bandi-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                 Músicos
             </a>
-            <a href="{{ route('profile.edit') }}" class="bandi-nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+            <a href="{{ route('profile.show', Auth::user()->username) }}" class="bandi-nav-link {{ request()->routeIs('profile.show') ? 'active' : '' }}">
                 Mi perfil
             </a>
 
@@ -175,7 +175,7 @@
     <!-- Mobile menu -->
     <div class="bandi-mobile-menu" :class="{ 'open': open }">
         <a href="{{ route('home') }}" class="bandi-nav-link">Músicos</a>
-        <a href="{{ route('profile.edit') }}" class="bandi-nav-link">Mi perfil</a>
+        <a href="{{ route('profile.show', Auth::user()->username) }}" class="bandi-nav-link">Mi perfil</a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="bandi-btn-logout">Cerrar sesión</button>

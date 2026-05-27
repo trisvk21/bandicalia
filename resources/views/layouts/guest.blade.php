@@ -5,22 +5,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <title>{{ config('app.name', 'Bandicalia') }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-brand-cream">
-            <div>
-                <a href="/" class="text-7xl font-bold text-brand-red tracking-tight">BANDICALIA</a>
-            </div>
+    <body class="font-sans antialiased min-h-screen bg-darker flex flex-col items-center justify-center px-4">
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white border border-brand-peach/40 shadow-sm overflow-hidden sm:rounded-2xl">
-                {{ $slot }}
-            </div>
+        <!-- Logo -->
+        <a href="{{ route('landing') }}" class="font-serif font-extrabold text-brand tracking-tight text-3xl mb-8 hover:text-coral transition">
+            BANDICALIA
+        </a>
+
+        <!-- Card -->
+        <div class="w-full max-w-md bg-dark border border-peach/20 rounded-2xl px-8 py-8 shadow-2xl">
+            {{ $slot }}
         </div>
+
+        <p class="mt-6 text-white/20 text-xs">© 2026 Bandicalia — TFG</p>
+
     </body>
 </html>

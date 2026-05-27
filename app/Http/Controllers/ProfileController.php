@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Genre;
 use App\Models\Instrument;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -80,7 +81,7 @@ class ProfileController extends Controller
         }
         $user->instruments()->sync($instrumentsSync);
 
-        return redirect()->route('profile.show')
-            ->with('status', 'profile-updated');
+        return redirect()->route('profile.show', Auth::user()->username)
+        ->with('status', 'profile-updated');
     }
 }
