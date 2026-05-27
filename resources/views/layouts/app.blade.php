@@ -67,7 +67,7 @@
     </main>
 
     <footer>
-        © {{ date('Y') }} Bandicalia — TFG
+        {{ date('Y') }} Bandicalia — TFG
     </footer>
 
 </body>
