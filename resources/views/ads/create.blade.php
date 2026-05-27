@@ -6,11 +6,11 @@
     <title>Bandicalia — Nuevo anuncio</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+<body class="bg-darker text-white min-h-screen flex flex-col">
 
     <!-- Navbar -->
-    <nav class="flex justify-between items-center px-8 py-5 bg-gray-900 border-b border-gray-800">
-        <a href="{{ route('home') }}" class="text-2xl font-bold text-indigo-400">🎸 Bandicalia</a>
+    <nav class="flex justify-between items-center px-8 py-5 bg-dark border-b border-brand/20">
+        <a href="{{ route('home') }}" class="font-serif text-2xl font-extrabold text-brand tracking-tight">BANDICALIA</a>
         <div class="flex gap-4 items-center">
             <a href="{{ route('profile.edit') }}" class="text-gray-300 hover:text-white transition">Mi perfil</a>
             <form method="POST" action="{{ route('logout') }}">
