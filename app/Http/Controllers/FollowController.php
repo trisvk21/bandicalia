@@ -27,13 +27,12 @@ class FollowController extends Controller
 
     // Aceptar solicitud
     public function accept(User $user)
-    {
-        Auth::user()->followers()
-            ->where('follower_id', $user->id)
-            ->updateExistingPivot($user->id, ['status' => 'accepted']);
+{
+    Auth::user()->followers()
+        ->updateExistingPivot($user->id, ['status' => 'accepted']);
 
-        return back()->with('status', 'solicitud-aceptada');
-    }
+    return back()->with('status', 'solicitud-aceptada');
+}
 
     // Cancelar solicitud o dejar de seguir
     public function unfollow(User $user)
@@ -60,5 +59,10 @@ class FollowController extends Controller
             ->get();
 
         return view('follows.requests', compact('requests'));
+    }
+    public function reject(User $user)
+    {
+    Auth::user()->followers()->detach($user->id);
+    return back();
     }
 }

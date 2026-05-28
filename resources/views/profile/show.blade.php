@@ -121,5 +121,114 @@
             @endif
 
         </div>
+
+        {{-- Solicitudes pendientes recibidas --}}
+@auth
+    @if(auth()->id() === $user->id)
+        @php $pendingRequests = $user->followers()->wherePivot('status', 'pending')->get(); @endphp
+        @if($pendingRequests->isNotEmpty())
+            <div class="bg-dark rounded-2xl p-6 border border-brand/30 mt-6">
+                <h2 class="font-serif text-lg font-bold text-cream mb-4">
+                    Solicitudes de seguimiento ({{ $pendingRequests->count() }})
+                </h2>
+                <div class="flex flex-col gap-3">
+                    @foreach($pendingRequests as $requester)
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
+                            <a href="{{ route('profile.show', $requester->username) }}"
+                               class="flex items-center gap-4 hover:opacity-80 transition">
+                                @if($requester->photo)
+                                    <img src="{{ Storage::url($requester->photo) }}"
+                                         class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                                @else
+                                    <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+                                @endif
+                                <p class="text-cream text-sm font-semibold">{{ $requester->username }}</p>
+                            </a>
+                            <div class="flex gap-2">
+                                <form method="POST" action="{{ route('follow.accept', $requester) }}">
+                                    @csrf
+                                    <button class="px-4 py-1.5 bg-brand hover:bg-coral text-white text-xs font-semibold rounded-lg transition">
+                                        Aceptar
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('follow.reject', $requester) }}">
+                                    @csrf
+                                    <button class="px-4 py-1.5 border border-white/20 text-white/40 hover:border-coral hover:text-coral text-xs rounded-lg transition">
+                                        Rechazar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+    @endif
+@endauth
+        {{-- Lista de seguidos: solo visible en tu propio perfil --}}
+@auth
+    @if(auth()->id() === $user->id)
+        @php $following = $user->following()->wherePivot('status', 'accepted')->get(); @endphp
+        <div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
+            <h2 class="font-serif text-lg font-bold text-cream mb-4">
+                Músicos que sigues ({{ $following->count() }})
+            </h2>
+            @if($following->isEmpty())
+                <p class="text-white/40 text-sm">Aún no sigues a nadie.</p>
+            @else
+                <div class="flex flex-col gap-3">
+                    @foreach($following as $musician)
+                        <a href="{{ route('profile.show', $musician->username) }}"
+                           class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
+                            @if($musician->photo)
+                                <img src="{{ Storage::url($musician->photo) }}"
+                                     class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                            @else
+                                <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+                            @endif
+                            <div>
+                                <p class="text-cream text-sm font-semibold">{{ $musician->username }}</p>
+                                @if($musician->city)
+                                    <p class="text-white/40 text-xs">{{ $musician->city }}</p>
+                                @endif
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    @endif
+@endauth
+
+{{-- Lista de seguidores --}}
+@php $followers = $user->followers()->wherePivot('status', 'accepted')->get(); @endphp
+<div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
+    <h2 class="font-serif text-lg font-bold text-cream mb-4">
+        Seguidores ({{ $followers->count() }})
+    </h2>
+    @if($followers->isEmpty())
+        <p class="text-white/40 text-sm">Aún no tienes seguidores.</p>
+    @else
+        <div class="flex flex-col gap-3">
+            @foreach($followers as $follower)
+                <a href="{{ route('profile.show', $follower->username) }}"
+                   class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
+                    @if($follower->photo)
+                        <img src="{{ Storage::url($follower->photo) }}"
+                             class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                    @else
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+                    @endif
+                    <div>
+                        <p class="text-cream text-sm font-semibold">{{ $follower->username }}</p>
+                        @if($follower->city)
+                            <p class="text-white/40 text-xs">{{ $follower->city }}</p>
+                        @endif
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    @endif
+</div>
     </main>
 </x-app-layout>
