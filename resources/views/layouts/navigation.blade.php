@@ -104,6 +104,60 @@
         color: var(--dark);
     }
 
+    /* Campana */
+    .notif-btn {
+        position: relative;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: rgba(255,237,206,.7);
+        padding: .35rem;
+        border-radius: 8px;
+        transition: color .2s, background .2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .notif-btn:hover {
+        color: var(--orange);
+        background: rgba(255,193,147,.08);
+    }
+
+    .notif-dropdown {
+        position: absolute;
+        top: calc(100% + 12px);
+        right: 0;
+        width: 320px;
+        background: var(--mid);
+        border: 1px solid rgba(255,131,131,.2);
+        border-radius: 14px;
+        box-shadow: 0 16px 48px rgba(0,0,0,.4);
+        overflow: hidden;
+        z-index: 200;
+    }
+
+    .notif-header {
+        padding: .9rem 1.25rem;
+        border-bottom: 1px solid rgba(255,193,147,.1);
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--beige);
+    }
+
+    .notif-empty {
+        padding: 2.5rem 1.25rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: .88rem;
+    }
+
+    .notif-empty svg {
+        margin: 0 auto .75rem;
+        display: block;
+        opacity: .4;
+    }
+
     /* Mobile */
     .bandi-hamburger {
         display: none;
@@ -134,7 +188,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<nav class="bandi-nav" x-data="{ open: false }">
+<nav class="bandi-nav" x-data="{ open: false, notif: false }">
     <div class="bandi-nav-inner">
         <!-- Logo -->
         <a href="{{ route('home') }}" class="bandi-logo">BANDICALIA</a>
@@ -149,6 +203,26 @@
             </a>
 
             <div class="bandi-nav-divider"></div>
+
+            <!-- Campana de notificaciones -->
+            <div style="position: relative;">
+                <button class="notif-btn" @click="notif = !notif" @click.outside="notif = false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+                </button>
+
+                <!-- Dropdown -->
+                <div class="notif-dropdown" x-show="notif" x-transition style="display:none;">
+                    <div class="notif-header">Notificaciones</div>
+                    <div class="notif-empty">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
+                        Sin notificaciones por ahora
+                    </div>
+                </div>
+            </div>
 
             <div class="bandi-user">
                 <div class="bandi-user-avatar">
