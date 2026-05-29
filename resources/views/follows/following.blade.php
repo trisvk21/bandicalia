@@ -9,7 +9,7 @@
 <body class="bg-cream text-text min-h-screen flex flex-col">
 
     <nav class="flex justify-between items-center px-8 py-5 bg-dark border-b border-darker">
-        <a href="{{ route('home') }}" class="text-2xl font-bold text-peach">🎸 Bandicalia</a>
+        <a href="{{ route('home') }}" class="text-2xl font-bold text-peach">Bandicalia</a>
         <div class="flex gap-4 items-center">
             <a href="{{ route('profile.show') }}" class="text-peach font-semibold hover:text-coral transition">Mi perfil</a>
             <form method="POST" action="{{ route('logout') }}">

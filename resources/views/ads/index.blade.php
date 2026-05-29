@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bandicalia — Anuncios</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
 <style>
     :root {
         --beige:  #FFEDCE;
@@ -179,83 +188,69 @@
     .bandi-mobile-menu.open { display: flex; }
 
     @media (max-width: 640px) {
-        .bandi-nav-links { display: none; }
+        .F { display: none; }
         .bandi-hamburger { display: block; }
     }
 </style>
+<body class="bg-darker text-white min-h-screen flex flex-col">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    @include('layouts.navigation')  
 
-<nav class="bandi-nav" x-data="{ open: false, notif: false }">
-    <div class="bandi-nav-inner">
-        <!-- Logo -->
-        <a href="{{ route('home') }}" class="bandi-logo">BANDICALIA</a>
+    <main class="flex-1 max-w-4xl mx-auto w-full px-6 py-10">
 
-        <!-- Desktop links -->
-        <div class="bandi-nav-links">
-            <a href="{{ route('ads.index') }}" class="bandi-nav-link {{ request()->routeIs('ads.index') ? 'active' : '' }}">
-                Anuncios
-            </a>
-            <a href="{{ route('home') }}" class="bandi-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
-                Músicos
-            </a>
-            <a href="{{ route('profile.show', Auth::user()->username) }}" class="bandi-nav-link {{ request()->routeIs('profile.show') ? 'active' : '' }}">
-                Mi perfil
-            </a>
-
-            <div class="bandi-nav-divider"></div>
-
-            <!-- Campana de notificaciones -->
-            <div style="position: relative;">
-                <button class="notif-btn" @click="notif = !notif" @click.outside="notif = false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                    </svg>
-                </button>
-
-                <!-- Dropdown -->
-                <div class="notif-dropdown" x-show="notif" x-transition style="display:none;">
-                    <div class="notif-header">Notificaciones</div>
-                    <div class="notif-empty">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                        </svg>
-                        Sin notificaciones por ahora
-                    </div>
-                </div>
-            </div>
-
-            <div class="bandi-user">
-                <div class="bandi-user-avatar">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-                {{ Auth::user()->name }}
-            </div>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="bandi-btn-logout">Salir</button>
-            </form>
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="font-serif text-3xl font-extrabold text-cream">Anuncios de bandas</h1>
+            @auth
+                @if(auth()->user()->account_type === 'band')
+                    <a href="{{ route('ads.create') }}" class="px-5 py-2 bg-brand hover:bg-coral text-white text-sm font-semibold rounded-xl transition">
+                        + Publicar anuncio
+                    </a>
+                @endif
+            @endauth
         </div>
 
-        <!-- Hamburger (mobile) -->
-        <button class="bandi-hamburger" @click="open = !open" aria-label="Menú">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-                <path x-show="open" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-    </div>
+        @if($ads->isEmpty())
+            <div class="text-center py-20 text-white/30">
+                <div class="text-5xl mb-4">📢</div>
+                <p class="text-lg">No hay anuncios publicados todavía.</p>
+            </div>
+        @else
+            <div class="flex flex-col gap-5">
+                @foreach($ads as $ad)
+                    <div class="bg-dark rounded-2xl p-6 border border-white/10 hover:border-brand/30 transition">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex-1">
+                                <h2 class="font-serif text-xl font-bold text-cream mb-2">{{ $ad->title }}</h2>
+                                <p class="text-white/60 text-sm leading-relaxed">{{ $ad->body }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-5 pt-4 border-t border-white/5">
+                            <a href="{{ route('profile.show', $ad->user->username) }}" class="flex items-center gap-3 hover:opacity-80 transition">
+                                @if($ad->user->photo)
+                                    <img src="{{ Storage::url($ad->user->photo) }}" class="w-8 h-8 rounded-xl object-cover border border-brand/20">
+                                @else
+                                    <div class="w-8 h-8 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-xs font-bold text-brand">
+                                        {{ strtoupper(substr($ad->user->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                                <span class="text-sm text-white/60 hover:text-white transition">{{ $ad->user->username }}</span>
+                            </a>
+                            <span class="text-xs text-white/30">{{ $ad->created_at->diffForHumans() }}</span>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
 
-    <!-- Mobile menu -->
-    <div class="bandi-mobile-menu" :class="{ 'open': open }">
-        <a href="{{ route('home') }}" class="bandi-nav-link">Músicos</a>
-        <a href="{{ route('profile.show', Auth::user()->username) }}" class="bandi-nav-link">Mi perfil</a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="bandi-btn-logout">Cerrar sesión</button>
-        </form>
-    </div>
-</nav>
+            <div class="mt-10">
+                {{ $ads->links() }}
+            </div>
+        @endif
+
+    </main>
+
+    <footer class="text-center text-gray-600 py-6 text-sm">
+        © 2026 Bandicalia — TFG
+    </footer>
+
+</body>
+</html>

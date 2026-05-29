@@ -46,4 +46,14 @@ class AdController extends Controller
 
         return redirect()->route('profile.edit')->with('status', 'ad-deleted');
     }
+
+    public function index()
+    {
+        $ads = Ad::with('user')
+                ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
+                ->latest()
+                ->paginate(10);
+
+        return view('ads.index', compact('ads'));
+    }
 }
