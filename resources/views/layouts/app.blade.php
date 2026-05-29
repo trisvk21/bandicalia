@@ -8,6 +8,8 @@
     <title>{{ config('app.name', 'Bandicalia') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
     <style>
         :root {
