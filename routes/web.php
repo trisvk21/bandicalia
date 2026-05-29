@@ -67,4 +67,7 @@ Route::middleware('auth')->group(function () {
 // Ver perfil público de un músico o banda
 Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('profile.show');
 
+//Mostrar anuncios
+Route::get('ads', [AdController::class, 'index'])->name('ads.index');
+
 require __DIR__.'/auth.php';
