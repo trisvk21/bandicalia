@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Bandicalia — Solicitudes</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-cream text-text min-h-screen flex flex-col">
