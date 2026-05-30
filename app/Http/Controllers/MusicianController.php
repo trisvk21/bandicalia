@@ -13,9 +13,53 @@ class MusicianController extends Controller
 {
     public function index(Request $request): View
     {
+        $user = auth()->user()->load('genres');
+        $userGenreIds = $user->genres->pluck('id')->toArray();
+        $userCity = $user->city;
+
+        // ── Anuncios: primero los de tu ciudad, luego el resto ──
+        $ads = Ad::with(['user', 'user.genres'])
+            ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
+            ->latest()
+            ->take(20)
+            ->get()
+            ->sortByDesc(function ($ad) use ($userCity) {
+                return $userCity && strtolower($ad->user->city ?? '') === strtolower($userCity) ? 1 : 0;
+            })
+            ->take(10)
+            ->values();
+
+        // ── Músicos: primero tu ciudad, luego por géneros en común ──
+        $featuredMusicians = User::with('genres', 'instruments')
+            ->whereNotNull('username')
+            ->where('account_type', 'musician')
+            ->where('id', '!=', $user->id)
+            ->get()
+            ->sortByDesc(function ($m) use ($userCity, $userGenreIds) {
+                $sameCity = $userCity && strtolower($m->city ?? '') === strtolower($userCity) ? 1000 : 0;
+                $commonGenres = count(array_intersect($m->genres->pluck('id')->toArray(), $userGenreIds));
+                return $sameCity + $commonGenres;
+            })
+            ->take(10)
+            ->values();
+
+        // ── Bandas: primero tu ciudad, luego por géneros en común ──
+        $featuredBands = User::with('genres', 'ads')
+            ->whereNotNull('username')
+            ->where('account_type', 'band')
+            ->where('id', '!=', $user->id)
+            ->get()
+            ->sortByDesc(function ($b) use ($userCity, $userGenreIds) {
+                $sameCity = $userCity && strtolower($b->city ?? '') === strtolower($userCity) ? 1000 : 0;
+                $commonGenres = count(array_intersect($b->genres->pluck('id')->toArray(), $userGenreIds));
+                return $sameCity + $commonGenres;
+            })
+            ->take(10)
+            ->values();
+
+        // ── Buscador con filtros ──
         $tab = $request->input('tab', 'musicians');
 
-        // Query músicos
         $musiciansQuery = User::with('genres', 'instruments')
             ->whereNotNull('username')
             ->where('account_type', 'musician');
@@ -47,7 +91,6 @@ class MusicianController extends Controller
 
         $musicians = $musiciansQuery->paginate(12, ['*'], 'musicians_page');
 
-        // Query bandas
         $bandsQuery = User::with('genres', 'ads')
             ->whereNotNull('username')
             ->where('account_type', 'band');
@@ -76,6 +119,10 @@ class MusicianController extends Controller
         $genres      = Genre::orderBy('name')->get();
         $instruments = Instrument::orderBy('name')->get();
 
-        return view('musicians.index', compact('musicians', 'bands', 'genres', 'instruments', 'tab'));
+        return view('musicians.index', compact(
+            'ads', 'featuredMusicians', 'featuredBands',
+            'musicians', 'bands',
+            'genres', 'instruments', 'tab', 'user'
+        ));
     }
 }
