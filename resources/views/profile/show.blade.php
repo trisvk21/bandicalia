@@ -42,14 +42,21 @@
     @else
         {{-- PERFIL AJENO: botón seguir --}}
         @if($followStatus === 'accepted')
-            <form method="POST" action="{{ route('follow.unfollow', $user) }}">
-                @csrf
-                <button style="padding:.5rem 1.25rem; border-radius:10px; border:1.5px solid var(--muted); color:var(--muted); background:transparent; font-size:.85rem; font-weight:600; cursor:pointer;"
-                        onmouseover="this.style.borderColor='var(--salmon)';this.style.color='var(--salmon)'"
-                        onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">
-                    ✓ Siguiendo
-                </button>
-            </form>
+    <div style="display:flex; gap:.5rem;">
+        <form method="POST" action="{{ route('follow.unfollow', $user) }}">
+            @csrf
+            <button style="padding:.5rem 1.25rem; border-radius:10px; border:1.5px solid var(--muted); color:var(--muted); background:transparent; font-size:.85rem; font-weight:600; cursor:pointer;"
+                    onmouseover="this.style.borderColor='var(--salmon)';this.style.color='var(--salmon)'"
+                    onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">
+                ✓ Siguiendo
+            </button>
+        </form>
+        <a href="{{ route('chat.show', $user) }}"
+           style="padding:.5rem 1.25rem; background:rgba(255,255,255,.05); border:1.5px solid rgba(255,193,147,.3); color:var(--beige); border-radius:10px; font-size:.85rem; font-weight:600; text-decoration:none; transition:border-color .2s;"
+           onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='rgba(255,193,147,.3)'">
+            💬 Mensaje
+        </a>
+    </div>
         @elseif($followStatus === 'pending')
             <form method="POST" action="{{ route('follow.unfollow', $user) }}">
                 @csrf

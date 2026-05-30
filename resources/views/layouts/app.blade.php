@@ -60,6 +60,7 @@
         }
     </style>
 </head>
+@stack('scripts')
 <body class="font-sans antialiased">
 
     @include('layouts.navigation')

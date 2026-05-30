@@ -6,6 +6,7 @@ use App\Http\Controllers\AdController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\ChatController;
 
 // Landing page (pública)
 Route::get('/', function () {
@@ -72,5 +73,11 @@ Route::get('ads', [AdController::class, 'index'])->name('ads.index');
 
 Route::get('/musicos', [MusicianController::class, 'musicos'])->middleware('auth')->name('musicos');
 Route::get('/bandas', [MusicianController::class, 'bandas'])->middleware('auth')->name('bandas');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/chat',             [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{user}',      [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{user}',     [ChatController::class, 'send'])->name('chat.send');
+});
 
 require __DIR__.'/auth.php';
