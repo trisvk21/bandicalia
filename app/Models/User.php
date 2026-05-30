@@ -84,4 +84,9 @@ public function followStatus(User $user): ?string
     {
         return $this->hasMany(Ad::class);
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
 }

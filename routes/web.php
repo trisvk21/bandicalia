@@ -63,6 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/follow/{user}/accept', [FollowController::class, 'accept'])->name('follow.accept');
     Route::get('/following',        [FollowController::class, 'following'])->name('follow.following');
     Route::get('/follow/requests',  [FollowController::class, 'requests'])->name('follow.requests');
+    Route::get('/ads', [AdController::class, 'index'])->name('ads.index');
+    Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
+    Route::post('/ads/{ad}/apply', [AdController::class, 'apply'])->name('ads.apply');
+    Route::get('/ads/{ad}/applications', [AdController::class, 'applications'])->name('ads.applications');
+    Route::patch('/ads/{ad}/applications/{application}', [AdController::class, 'updateApplication'])->name('ads.applications.update');
 });
 
 // Ver perfil público de un músico o banda
