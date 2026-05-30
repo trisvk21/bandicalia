@@ -33,14 +33,42 @@
                             @endif
                         </div>
                         @auth
-                            @if(auth()->id() === $user->id)
-                                <a href="{{ route('profile.edit') }}"
-                                   style="padding:.5rem 1.25rem; background:var(--red); color:#fff; border-radius:10px; font-size:.85rem; font-weight:600; text-decoration:none; transition:background .2s;"
-                                   onmouseover="this.style.background='var(--salmon)'" onmouseout="this.style.background='var(--red)'">
-                                    Editar perfil
-                                </a>
-                            @endif
-                        @endauth
+    @if(auth()->id() === $user->id)
+        <a href="{{ route('profile.edit') }}"
+           style="padding:.5rem 1.25rem; background:var(--red); color:#fff; border-radius:10px; font-size:.85rem; font-weight:600; text-decoration:none; transition:background .2s;"
+           onmouseover="this.style.background='var(--salmon)'" onmouseout="this.style.background='var(--red)'">
+            Editar perfil
+        </a>
+    @else
+        {{-- PERFIL AJENO: botón seguir --}}
+        @if($followStatus === 'accepted')
+            <form method="POST" action="{{ route('follow.unfollow', $user) }}">
+                @csrf
+                <button style="padding:.5rem 1.25rem; border-radius:10px; border:1.5px solid var(--muted); color:var(--muted); background:transparent; font-size:.85rem; font-weight:600; cursor:pointer;"
+                        onmouseover="this.style.borderColor='var(--salmon)';this.style.color='var(--salmon)'"
+                        onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">
+                    ✓ Siguiendo
+                </button>
+            </form>
+        @elseif($followStatus === 'pending')
+            <form method="POST" action="{{ route('follow.unfollow', $user) }}">
+                @csrf
+                <button style="padding:.5rem 1.25rem; border-radius:10px; border:1.5px solid rgba(255,193,147,.3); color:rgba(255,237,206,.4); background:transparent; font-size:.85rem; font-weight:600; cursor:pointer;">
+                    Solicitud enviada
+                </button>
+            </form>
+        @else
+            <form method="POST" action="{{ route('follow.send', $user) }}">
+                @csrf
+                <button style="padding:.5rem 1.25rem; background:var(--red); color:#fff; border-radius:10px; font-size:.85rem; font-weight:600; border:none; cursor:pointer; transition:background .2s;"
+                        onmouseover="this.style.background='var(--salmon)'"
+                        onmouseout="this.style.background='var(--red)'">
+                    + Seguir
+                </button>
+            </form>
+        @endif
+    @endif
+@endauth
                     </div>
 
                     <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem; font-size:.85rem; color:var(--muted);">
@@ -168,32 +196,60 @@
         {{-- Lista de seguidos: solo visible en tu propio perfil --}}
 @auth
     @if(auth()->id() === $user->id)
-        @php $following = $user->following()->wherePivot('status', 'accepted')->get(); @endphp
+        @php
+            $following = $user->following()->wherePivot('status', 'accepted')->get();
+            $followingMusicians = $following->where('account_type', 'musician');
+            $followingBands = $following->where('account_type', 'band');
+        @endphp
         <div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
             <h2 class="font-serif text-lg font-bold text-cream mb-4">
-                Músicos que sigues ({{ $following->count() }})
+                Cuentas que sigues ({{ $following->count() }})
             </h2>
             @if($following->isEmpty())
                 <p class="text-white/40 text-sm">Aún no sigues a nadie.</p>
             @else
                 <div class="flex flex-col gap-3">
-                    @foreach($following as $musician)
-                        <a href="{{ route('profile.show', $musician->username) }}"
-                           class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
-                            @if($musician->photo)
-                                <img src="{{ Storage::url($musician->photo) }}"
-                                     class="w-10 h-10 rounded-xl object-cover border border-brand/20">
-                            @else
-                                <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
-                            @endif
-                            <div>
-                                <p class="text-cream text-sm font-semibold">{{ $musician->username }}</p>
-                                @if($musician->city)
-                                    <p class="text-white/40 text-xs">{{ $musician->city }}</p>
+                    @if($followingMusicians->isNotEmpty())
+                        <p class="text-white/30 text-xs uppercase tracking-widest font-semibold mt-1">Músicos</p>
+                        @foreach($followingMusicians as $musician)
+                            <a href="{{ route('profile.show', $musician->username) }}"
+                               class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
+                                @if($musician->photo)
+                                    <img src="{{ Storage::url($musician->photo) }}"
+                                         class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                                @else
+                                    <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
                                 @endif
-                            </div>
-                        </a>
-                    @endforeach
+                                <div>
+                                    <p class="text-cream text-sm font-semibold">{{ $musician->username }}</p>
+                                    @if($musician->city)
+                                        <p class="text-white/40 text-xs">{{ $musician->city }}</p>
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
+                    @endif
+
+                    @if($followingBands->isNotEmpty())
+                        <p class="text-white/30 text-xs uppercase tracking-widest font-semibold mt-3">Bandas</p>
+                        @foreach($followingBands as $band)
+                            <a href="{{ route('profile.show', $band->username) }}"
+                               class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
+                                @if($band->photo)
+                                    <img src="{{ Storage::url($band->photo) }}"
+                                         class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                                @else
+                                    <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+                                @endif
+                                <div>
+                                    <p class="text-cream text-sm font-semibold">{{ $band->username }}</p>
+                                    @if($band->city)
+                                        <p class="text-white/40 text-xs">{{ $band->city }}</p>
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
+                    @endif
                 </div>
             @endif
         </div>
@@ -201,34 +257,66 @@
 @endauth
 
 {{-- Lista de seguidores --}}
-@php $followers = $user->followers()->wherePivot('status', 'accepted')->get(); @endphp
-<div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
-    <h2 class="font-serif text-lg font-bold text-cream mb-4">
-        Seguidores ({{ $followers->count() }})
-    </h2>
-    @if($followers->isEmpty())
-        <p class="text-white/40 text-sm">Aún no tienes seguidores.</p>
-    @else
-        <div class="flex flex-col gap-3">
-            @foreach($followers as $follower)
-                <a href="{{ route('profile.show', $follower->username) }}"
-                   class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
-                    @if($follower->photo)
-                        <img src="{{ Storage::url($follower->photo) }}"
-                             class="w-10 h-10 rounded-xl object-cover border border-brand/20">
-                    @else
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+@auth
+    @if(auth()->id() === $user->id)
+        @php
+            $followers = $user->followers()->wherePivot('status', 'accepted')->get();
+            $followerMusicians = $followers->where('account_type', 'musician');
+            $followerBands = $followers->where('account_type', 'band');
+        @endphp
+        <div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
+            <h2 class="font-serif text-lg font-bold text-cream mb-4">
+                Seguidores ({{ $followers->count() }})
+            </h2>
+            @if($followers->isEmpty())
+                <p class="text-white/40 text-sm">Aún no tienes seguidores.</p>
+            @else
+                <div class="flex flex-col gap-3">
+                    @if($followerMusicians->isNotEmpty())
+                        <p class="text-white/30 text-xs uppercase tracking-widest font-semibold mt-1">Músicos</p>
+                        @foreach($followerMusicians as $follower)
+                            <a href="{{ route('profile.show', $follower->username) }}"
+                               class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
+                                @if($follower->photo)
+                                    <img src="{{ Storage::url($follower->photo) }}"
+                                         class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                                @else
+                                    <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+                                @endif
+                                <div>
+                                    <p class="text-cream text-sm font-semibold">{{ $follower->username }}</p>
+                                    @if($follower->city)
+                                        <p class="text-white/40 text-xs">{{ $follower->city }}</p>
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
                     @endif
-                    <div>
-                        <p class="text-cream text-sm font-semibold">{{ $follower->username }}</p>
-                        @if($follower->city)
-                            <p class="text-white/40 text-xs">{{ $follower->city }}</p>
-                        @endif
-                    </div>
-                </a>
-            @endforeach
+
+                    @if($followerBands->isNotEmpty())
+                        <p class="text-white/30 text-xs uppercase tracking-widest font-semibold mt-3">Bandas</p>
+                        @foreach($followerBands as $band)
+                            <a href="{{ route('profile.show', $band->username) }}"
+                               class="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-brand/40 transition">
+                                @if($band->photo)
+                                    <img src="{{ Storage::url($band->photo) }}"
+                                         class="w-10 h-10 rounded-xl object-cover border border-brand/20">
+                                @else
+                                    <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-lg">🎵</div>
+                                @endif
+                                <div>
+                                    <p class="text-cream text-sm font-semibold">{{ $band->username }}</p>
+                                    @if($band->city)
+                                        <p class="text-white/40 text-xs">{{ $band->city }}</p>
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
+                    @endif
+                </div>
+            @endif
         </div>
     @endif
-</div>
+@endauth
     </main>
 </x-app-layout>
