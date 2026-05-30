@@ -16,7 +16,7 @@
         <section>
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
                 <h2 style="font-family:'Playfair Display',serif; font-weight:700; font-size:1.3rem; color:#1A0A00;">Anuncios de bandas</h2>
-                <a href="#" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
+                <a href="{{ url('/ads') }}" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
             </div>
             @if($ads->isEmpty())
                 <div style="background:#fff8f0; border:1.5px dashed rgba(255,193,147,.4); border-radius:16px; padding:2rem; text-align:center; color:#A0704A; font-size:.9rem;">
@@ -75,7 +75,7 @@
         <section>
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
                 <h2 style="font-family:'Playfair Display',serif; font-weight:700; font-size:1.3rem; color:#1A0A00;">Músicos cerca de ti</h2>
-                <a href="#" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
+                <a href="{{ url('/musicos') }}" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
             </div>
             @if($featuredMusicians->isEmpty())
                 <div style="background:#fff8f0; border:1.5px dashed rgba(255,193,147,.4); border-radius:16px; padding:2rem; text-align:center; color:#A0704A; font-size:.9rem;">
@@ -190,7 +190,7 @@
         <section>
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
                 <h2 style="font-family:'Playfair Display',serif; font-weight:700; font-size:1.3rem; color:#1A0A00;">Bandas cerca de ti</h2>
-                <a href="#" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
+                <a href="{{ url('/bandas') }}" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
             </div>
             @if($featuredBands->isEmpty())
                 <div style="background:#fff8f0; border:1.5px dashed rgba(255,193,147,.4); border-radius:16px; padding:2rem; text-align:center; color:#A0704A; font-size:.9rem;">

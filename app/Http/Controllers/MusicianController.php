@@ -127,71 +127,71 @@ class MusicianController extends Controller
     }
 
     public function musicos(Request $request): View
-{
-    $query = User::with('genres', 'instruments')
-        ->whereNotNull('username')
-        ->where('account_type', 'musician');
+    {
+        $query = User::with('genres', 'instruments')
+            ->whereNotNull('username')
+            ->where('account_type', 'musician');
 
-    if ($request->filled('search')) {
-        $search = $request->input('search');
-        $query->where(function ($q) use ($search) {
-            $q->where('username', 'like', "%$search%")
-              ->orWhere('full_name', 'like', "%$search%")
-              ->orWhere('name', 'like', "%$search%");
-        });
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('username', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                  ->orWhere('name', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%' . $request->input('city') . '%');
+        }
+
+        if ($request->filled('genre')) {
+            $query->whereHas('genres', function ($q) use ($request) {
+                $q->where('genres.id', $request->input('genre'));
+            });
+        }
+
+        if ($request->filled('instrument')) {
+            $query->whereHas('instruments', function ($q) use ($request) {
+                $q->where('instruments.id', $request->input('instrument'));
+            });
+        }
+
+        $musicians = $query->paginate(12);
+        $genres = Genre::orderBy('name')->get();
+        $instruments = Instrument::orderBy('name')->get();
+
+        return view('musicians.musicos', compact('musicians', 'genres', 'instruments'));
     }
 
-    if ($request->filled('city')) {
-        $query->where('city', 'like', '%' . $request->input('city') . '%');
+    public function bandas(Request $request): View
+    {
+        $query = User::with('genres', 'ads')
+            ->whereNotNull('username')
+            ->where('account_type', 'band');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('username', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                  ->orWhere('name', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%' . $request->input('city') . '%');
+        }
+
+        if ($request->filled('genre')) {
+            $query->whereHas('genres', function ($q) use ($request) {
+                $q->where('genres.id', $request->input('genre'));
+            });
+        }
+
+        $bands = $query->paginate(12);
+        $genres = Genre::orderBy('name')->get();
+
+        return view('musicians.bandas', compact('bands', 'genres'));
     }
-
-    if ($request->filled('genre')) {
-        $query->whereHas('genres', function ($q) use ($request) {
-            $q->where('genres.id', $request->input('genre'));
-        });
-    }
-
-    if ($request->filled('instrument')) {
-        $query->whereHas('instruments', function ($q) use ($request) {
-            $q->where('instruments.id', $request->input('instrument'));
-        });
-    }
-
-    $musicians = $query->paginate(12);
-    $genres = Genre::orderBy('name')->get();
-    $instruments = Instrument::orderBy('name')->get();
-
-    return view('musicians.musicos', compact('musicians', 'genres', 'instruments'));
-}
-
-public function bandas(Request $request): View
-{
-    $query = User::with('genres')
-        ->whereNotNull('username')
-        ->where('account_type', 'band');
-
-    if ($request->filled('search')) {
-        $search = $request->input('search');
-        $query->where(function ($q) use ($search) {
-            $q->where('username', 'like', "%$search%")
-              ->orWhere('full_name', 'like', "%$search%")
-              ->orWhere('name', 'like', "%$search%");
-        });
-    }
-
-    if ($request->filled('city')) {
-        $query->where('city', 'like', '%' . $request->input('city') . '%');
-    }
-
-    if ($request->filled('genre')) {
-        $query->whereHas('genres', function ($q) use ($request) {
-            $q->where('genres.id', $request->input('genre'));
-        });
-    }
-
-    $bands = $query->paginate(12);
-    $genres = Genre::orderBy('name')->get();
-
-    return view('musicians.bandas', compact('bands', 'genres'));
-}
 }
