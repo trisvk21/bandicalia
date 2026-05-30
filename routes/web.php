@@ -70,4 +70,7 @@ Route::get('/musicians/{username}', [ProfileController::class, 'show'])->name('p
 //Mostrar anuncios
 Route::get('ads', [AdController::class, 'index'])->name('ads.index');
 
+Route::get('/musicos', [MusicianController::class, 'musicos'])->middleware('auth')->name('musicos');
+Route::get('/bandas', [MusicianController::class, 'bandas'])->middleware('auth')->name('bandas');
+
 require __DIR__.'/auth.php';
