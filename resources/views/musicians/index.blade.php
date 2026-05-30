@@ -14,61 +14,61 @@
 
         {{-- ── FILA 1: Anuncios de bandas ── --}}
         <section>
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
-                <h2 style="font-family:'Playfair Display',serif; font-weight:700; font-size:1.3rem; color:#1A0A00;">Anuncios de bandas</h2>
-                <a href="{{ url('/ads') }}" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+            <h2 style="font-family:'Playfair Display',serif; font-weight:700; font-size:1.3rem; color:#1A0A00;">Anuncios de bandas</h2>
+            <a href="{{ route('ads.index') }}" style="font-size:.72rem; color:#A0704A; font-weight:600; letter-spacing:.08em; text-transform:uppercase; text-decoration:none;">Ver más →</a>
+        </div>
+        @if($ads->isEmpty())
+            <div style="background:#fff8f0; border:1.5px dashed rgba(255,193,147,.4); border-radius:16px; padding:2rem; text-align:center; color:#A0704A; font-size:.9rem;">
+                No hay anuncios publicados aún.
             </div>
-            @if($ads->isEmpty())
-                <div style="background:#fff8f0; border:1.5px dashed rgba(255,193,147,.4); border-radius:16px; padding:2rem; text-align:center; color:#A0704A; font-size:.9rem;">
-                    No hay anuncios publicados aún.
-                </div>
-            @else
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;">
-                    @foreach($ads->take(3) as $ad)
-                        <a href="{{ route('profile.show', $ad->user->username) }}"
-                            style="background:#fff8f0; border:1.5px solid rgba(255,193,147,.3); border-radius:20px; display:flex; flex-direction:column; overflow:hidden; text-decoration:none; color:#3d1f00; transition:transform .2s, box-shadow .2s;"
-                            onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(255,55,55,.1)';this.style.borderColor='#FF8383'"
-                            onmouseout="this.style.transform='';this.style.boxShadow='';this.style.borderColor='rgba(255,193,147,.3)'">
-                            <div style="height:4px; background:linear-gradient(90deg,#FF3737,#FF8383);"></div>
-                            <div style="padding:1.4rem; display:flex; flex-direction:column; gap:.75rem; flex:1;">
-                                <!-- Banda -->
-                                <div style="display:flex; align-items:center; gap:.75rem;">
-                                    @if($ad->user->photo)
-                                        <img src="{{ Storage::url($ad->user->photo) }}"
-                                            style="width:48px;height:48px;border-radius:12px;object-fit:cover;flex-shrink:0;"
-                                            alt="{{ $ad->user->name }}">
-                                    @else
-                                        <div style="width:48px;height:48px;border-radius:12px;flex-shrink:0;background:linear-gradient(135deg,#FF3737,#FF8383);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;color:#fff;">
-                                            {{ strtoupper(substr($ad->user->name, 0, 1)) }}
-                                        </div>
-                                    @endif
-                                    <div>
-                                        <p style="font-weight:700; font-size:.9rem; color:#1A0A00;">{{ $ad->user->full_name ?? $ad->user->name }}</p>
-                                        @if($ad->user->city)
-                                            <p style="font-size:.75rem; color:#A0704A;">{{ $ad->user->city }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <!-- Título -->
-                                <p style="font-weight:700; font-size:1rem; color:#1A0A00; line-height:1.3;">{{ $ad->title }}</p>
-                                <!-- Cuerpo -->
-                                <p style="font-size:.83rem; color:#A0704A; line-height:1.5; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;">{{ $ad->body }}</p>
-                                <!-- Géneros de la banda -->
-                                @if($ad->user->genres->isNotEmpty())
-                                    <div style="display:flex;flex-wrap:wrap;gap:.35rem;">
-                                        @foreach($ad->user->genres->take(3) as $genre)
-                                            <span style="font-size:.7rem;font-weight:600;padding:.25rem .65rem;border-radius:999px;background:rgba(255,55,55,.08);color:#b92b2b;border:1px solid rgba(255,55,55,.2);">{{ $genre->name }}</span>
-                                        @endforeach
+        @else
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;">
+                @foreach($ads->take(3) as $ad)
+                    <a href="{{ route('ads.show', $ad) }}"
+                        style="background:#fff8f0; border:1.5px solid rgba(255,193,147,.3); border-radius:20px; display:flex; flex-direction:column; overflow:hidden; text-decoration:none; color:#3d1f00; transition:transform .2s, box-shadow .2s;"
+                        onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(255,55,55,.1)';this.style.borderColor='#FF8383'"
+                        onmouseout="this.style.transform='';this.style.boxShadow='';this.style.borderColor='rgba(255,193,147,.3)'">
+                        <div style="height:4px; background:linear-gradient(90deg,#FF3737,#FF8383);"></div>
+                        <div style="padding:1.4rem; display:flex; flex-direction:column; gap:.75rem; flex:1;">
+                            <!-- Banda -->
+                            <div style="display:flex; align-items:center; gap:.75rem;">
+                                @if($ad->user->photo)
+                                    <img src="{{ Storage::url($ad->user->photo) }}"
+                                        style="width:48px;height:48px;border-radius:12px;object-fit:cover;flex-shrink:0;"
+                                        alt="{{ $ad->user->name }}">
+                                @else
+                                    <div style="width:48px;height:48px;border-radius:12px;flex-shrink:0;background:linear-gradient(135deg,#FF3737,#FF8383);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;color:#fff;">
+                                        {{ strtoupper(substr($ad->user->name, 0, 1)) }}
                                     </div>
                                 @endif
+                                <div>
+                                    <p style="font-weight:700; font-size:.9rem; color:#1A0A00;">{{ $ad->user->full_name ?? $ad->user->name }}</p>
+                                    @if($ad->user->city)
+                                        <p style="font-size:.75rem; color:#A0704A;">{{ $ad->user->city }}</p>
+                                    @endif
+                                </div>
                             </div>
-                            <div style="padding:.75rem 1.4rem; border-top:1px solid rgba(255,193,147,.2);">
-                                <p style="font-size:.72rem; color:#A0704A;">{{ $ad->created_at->diffForHumans() }}</p>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            @endif
+                            <!-- Título -->
+                            <p style="font-weight:700; font-size:1rem; color:#1A0A00; line-height:1.3;">{{ $ad->title }}</p>
+                            <!-- Cuerpo -->
+                            <p style="font-size:.83rem; color:#A0704A; line-height:1.5; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;">{{ $ad->body }}</p>
+                            <!-- Géneros de la banda -->
+                            @if($ad->user->genres->isNotEmpty())
+                                <div style="display:flex;flex-wrap:wrap;gap:.35rem;">
+                                    @foreach($ad->user->genres->take(3) as $genre)
+                                        <span style="font-size:.7rem;font-weight:600;padding:.25rem .65rem;border-radius:999px;background:rgba(255,55,55,.08);color:#b92b2b;border:1px solid rgba(255,55,55,.2);">{{ $genre->name }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                        <div style="padding:.75rem 1.4rem; border-top:1px solid rgba(255,193,147,.2);">
+                            <p style="font-size:.72rem; color:#A0704A;">{{ $ad->created_at->diffForHumans() }}</p>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
         </section>
 
         {{-- ── FILA 2: Músicos cerca de ti ── --}}
