@@ -198,9 +198,14 @@
             <a href="{{ route('ads.index') }}" class="bandi-nav-link {{ request()->routeIs('ads.index') ? 'active' : '' }}">
                 Anuncios
             </a>
-            <a href="{{ route('home') }}" class="bandi-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+            <a href="{{ route('musicos') }}" class="bandi-nav-link {{ request()->routeIs('musicos') ? 'active' : '' }}">
                 Músicos
             </a>
+
+            <a href="{{ route('bandas') }}" class="bandi-nav-link {{ request()->routeIs('bandas') ? 'active' : '' }}">
+                Bandas
+            </a>
+
             <a href="{{ route('profile.show', Auth::user()->username) }}" class="bandi-nav-link {{ request()->routeIs('profile.show') ? 'active' : '' }}">
                 Mi perfil
             </a>
@@ -251,7 +256,8 @@
 
     <!-- Mobile menu -->
     <div class="bandi-mobile-menu" :class="{ 'open': open }">
-        <a href="{{ route('home') }}" class="bandi-nav-link">Músicos</a>
+        <a href="{{ route('musicos') }}" class="bandi-nav-link">Músicos</a>
+        <a href="{{ route('bandas') }}" class="bandi-nav-link">Bandas</a>
         <a href="{{ route('profile.show', Auth::user()->username) }}" class="bandi-nav-link">Mi perfil</a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
