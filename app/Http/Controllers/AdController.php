@@ -8,6 +8,7 @@ use App\Notifications\ApplicationStatusChanged;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Notifications\NewBandAd;
 
 class AdController extends Controller
 {
@@ -17,19 +18,30 @@ class AdController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'title' => ['required', 'string', 'max:100'],
-            'body'  => ['required', 'string', 'max:1000'],
-        ]);
+{
+    $request->validate([
+        'title' => ['required', 'string', 'max:100'],
+        'body'  => ['required', 'string', 'max:1000'],
+    ]);
 
-        $request->user()->ads()->create([
-            'title' => $request->input('title'),
-            'body'  => $request->input('body'),
-        ]);
+    $ad = $request->user()->ads()->create([
+        'title' => $request->input('title'),
+        'body'  => $request->input('body'),
+    ]);
 
-        return redirect()->route('ads.index')->with('status', 'ad-created');
+    $ad->load('user');
+
+    // Notificar a todos los seguidores de la banda
+    $followers = $request->user()->followers()
+        ->wherePivot('status', 'accepted')
+        ->get();
+
+    foreach ($followers as $follower) {
+        $follower->notify(new NewBandAd($ad));
     }
+
+    return redirect()->route('ads.index')->with('status', 'ad-created');
+}
 
     public function destroy(Ad $ad): RedirectResponse
     {

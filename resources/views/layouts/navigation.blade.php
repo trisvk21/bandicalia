@@ -241,41 +241,65 @@
         @else
         <div style="overflow-y:auto; flex:1;">
             @foreach($notifications as $notification)
-    <div style="display:flex; align-items:center; gap:.75rem; padding:.85rem 1.25rem; border-bottom:1px solid rgba(255,193,147,.08);
-                {{ $notification->read_at ? '' : 'background:rgba(255,55,55,.05);' }}">
-        @if($notification->data['follower_photo'])
-            <img src="{{ Storage::url($notification->data['follower_photo']) }}"
-                 style="width:36px; height:36px; border-radius:8px; object-fit:cover; flex-shrink:0; border:1.5px solid rgba(255,55,55,.3);">
-        @else
-            <div style="width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--orange),var(--red)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; color:#fff; flex-shrink:0; font-size:.9rem;">
-                {{ strtoupper(substr($notification->data['follower_username'], 0, 1)) }}
-            </div>
-        @endif
-        <div style="flex:1;">
-            <p style="color:var(--beige); font-size:.85rem; font-weight:600;">{{ $notification->data['follower_username'] }}</p>
-            <p style="color:var(--muted); font-size:.78rem; margin-bottom:.5rem;">te ha enviado una solicitud de seguimiento</p>
-            @php $follower = \App\Models\User::find($notification->data['follower_id']); @endphp
-            @if($follower)
-                <div style="display:flex; gap:.5rem;">
-                    <form method="POST" action="{{ route('follow.accept', $follower) }}">
-                        @csrf
-                        <button style="padding:.25rem .75rem; background:var(--red); color:#fff; border:none; border-radius:6px; font-size:.75rem; font-weight:600; cursor:pointer; transition:background .2s;"
-                                onmouseover="this.style.background='var(--salmon)'" onmouseout="this.style.background='var(--red)'">
-                            Aceptar
-                        </button>
-                    </form>
-                    <form method="POST" action="{{ route('follow.reject', $follower) }}">
-                        @csrf
-                        <button style="padding:.25rem .75rem; background:transparent; color:var(--muted); border:1px solid rgba(255,193,147,.3); border-radius:6px; font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s;"
-                                onmouseover="this.style.borderColor='var(--salmon)';this.style.color='var(--salmon)'" onmouseout="this.style.borderColor='rgba(255,193,147,.3)';this.style.color='var(--muted)'">
-                            Rechazar
-                        </button>
-                    </form>
+    @if(isset($notification->data['ad_id']))
+        {{-- Notificación de anuncio nuevo --}}
+        <a href="{{ route('ads.show', $notification->data['ad_id']) }}"
+           style="display:flex; align-items:center; gap:.75rem; padding:.85rem 1.25rem; border-bottom:1px solid rgba(255,193,147,.08); text-decoration:none; transition:background .15s;
+                  {{ $notification->read_at ? '' : 'background:rgba(255,55,55,.05);' }}"
+           onmouseover="this.style.background='rgba(255,193,147,.07)'"
+           onmouseout="this.style.background='{{ $notification->read_at ? 'transparent' : 'rgba(255,55,55,.05)' }}'">
+            @if($notification->data['band_photo'])
+                <img src="{{ Storage::url($notification->data['band_photo']) }}"
+                     style="width:36px; height:36px; border-radius:8px; object-fit:cover; flex-shrink:0; border:1.5px solid rgba(255,55,55,.3);">
+            @else
+                <div style="width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--orange),var(--red)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; color:#fff; flex-shrink:0; font-size:.9rem;">
+                    {{ strtoupper(substr($notification->data['band_username'], 0, 1)) }}
                 </div>
             @endif
-            <p style="color:var(--muted); font-size:.72rem; margin-top:.35rem; opacity:.6;">{{ $notification->created_at->diffForHumans() }}</p>
+            <div>
+                <p style="color:var(--beige); font-size:.85rem; font-weight:600;">{{ $notification->data['band_username'] }}</p>
+                <p style="color:var(--muted); font-size:.78rem;">ha publicado: {{ $notification->data['ad_title'] }}</p>
+                <p style="color:var(--muted); font-size:.72rem; margin-top:.15rem; opacity:.6;">{{ $notification->created_at->diffForHumans() }}</p>
+            </div>
+        </a>
+    @else
+        {{-- Notificación de solicitud de seguimiento --}}
+        <div style="display:flex; align-items:center; gap:.75rem; padding:.85rem 1.25rem; border-bottom:1px solid rgba(255,193,147,.08);
+                    {{ $notification->read_at ? '' : 'background:rgba(255,55,55,.05);' }}">
+            @if($notification->data['follower_photo'])
+                <img src="{{ Storage::url($notification->data['follower_photo']) }}"
+                     style="width:36px; height:36px; border-radius:8px; object-fit:cover; flex-shrink:0; border:1.5px solid rgba(255,55,55,.3);">
+            @else
+                <div style="width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--orange),var(--red)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; color:#fff; flex-shrink:0; font-size:.9rem;">
+                    {{ strtoupper(substr($notification->data['follower_username'], 0, 1)) }}
+                </div>
+            @endif
+            <div style="flex:1;">
+                <p style="color:var(--beige); font-size:.85rem; font-weight:600;">{{ $notification->data['follower_username'] }}</p>
+                <p style="color:var(--muted); font-size:.78rem; margin-bottom:.5rem;">te ha enviado una solicitud de seguimiento</p>
+                @php $follower = \App\Models\User::find($notification->data['follower_id']); @endphp
+                @if($follower)
+                    <div style="display:flex; gap:.5rem;">
+                        <form method="POST" action="{{ route('follow.accept', $follower) }}">
+                            @csrf
+                            <button style="padding:.25rem .75rem; background:var(--red); color:#fff; border:none; border-radius:6px; font-size:.75rem; font-weight:600; cursor:pointer; transition:background .2s;"
+                                    onmouseover="this.style.background='var(--salmon)'" onmouseout="this.style.background='var(--red)'">
+                                Aceptar
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ route('follow.reject', $follower) }}">
+                            @csrf
+                            <button style="padding:.25rem .75rem; background:transparent; color:var(--muted); border:1px solid rgba(255,193,147,.3); border-radius:6px; font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s;"
+                                    onmouseover="this.style.borderColor='var(--salmon)';this.style.color='var(--salmon)'" onmouseout="this.style.borderColor='rgba(255,193,147,.3)';this.style.color='var(--muted)'">
+                                Rechazar
+                            </button>
+                        </form>
+                    </div>
+                @endif
+                <p style="color:var(--muted); font-size:.72rem; margin-top:.35rem; opacity:.6;">{{ $notification->created_at->diffForHumans() }}</p>
+            </div>
         </div>
-    </div>
+    @endif
 @endforeach
 </div>
             <a href="#" onclick="markAllRead(event)"

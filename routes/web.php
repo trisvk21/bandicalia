@@ -85,4 +85,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/{user}',     [ChatController::class, 'send'])->name('chat.send');
 });
 
+Route::get('/ads/{ad}', [AdController::class, 'show'])->name('ads.show');
+
 require __DIR__.'/auth.php';
