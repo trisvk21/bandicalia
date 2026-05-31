@@ -51,11 +51,13 @@
                             class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
                         @error('username') <p class="text-coral text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
+                    @if($user->account_type === 'musician')
                     <div>
                         <label class="block text-sm font-medium text-white/70 mb-1">Nombre completo</label>
                         <input type="text" name="full_name" value="{{ old('full_name', $user->full_name) }}"
-                            class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
+                        class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
                     </div>
+                    @endif
                     <div>
                         <label class="block text-sm font-medium text-white/70 mb-1">Email *</label>
                         <input type="email" name="email" value="{{ old('email', $user->email) }}"
@@ -67,11 +69,13 @@
                         <input type="text" name="city" value="{{ old('city', $user->city) }}"
                             class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
                     </div>
+                    @if($user->account_type === 'musician')
                     <div>
                         <label class="block text-sm font-medium text-white/70 mb-1">Edad</label>
                         <input type="number" name="age" value="{{ old('age', $user->age) }}" min="14" max="100"
-                            class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
+                        class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
                     </div>
+                    @endif
                     <div>
                         <label class="block text-sm font-medium text-white/70 mb-1">Nivel general</label>
                         <select name="general_level"
@@ -91,11 +95,13 @@
                         class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition resize-none">{{ old('bio', $user->bio) }}</textarea>
                 </div>
 
+                @if($user->account_type === 'musician')
                 <div class="flex items-center gap-3 p-4 rounded-xl border border-white/10 bg-darker">
                     <input type="checkbox" name="has_band" id="has_band" value="1"
-                        {{ $user->has_band ? 'checked' : '' }} class="w-5 h-5 accent-brand">
+                    {{ $user->has_band ? 'checked' : '' }} class="w-5 h-5 accent-brand">
                     <label for="has_band" class="text-cream text-sm cursor-pointer">Actualmente estoy en una banda</label>
                 </div>
+                @endif
 
                 <div>
                     <label class="block text-sm font-medium text-white/70 mb-2">Foto de perfil</label>
