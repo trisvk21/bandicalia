@@ -124,17 +124,20 @@
     }
 
     .notif-dropdown {
-        position: absolute;
-        top: calc(100% + 12px);
-        right: 0;
-        width: 320px;
-        background: var(--mid);
-        border: 1px solid rgba(255,131,131,.2);
-        border-radius: 14px;
-        box-shadow: 0 16px 48px rgba(0,0,0,.4);
-        overflow: hidden;
-        z-index: 200;
-    }
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 320px;
+    background: var(--mid);
+    border: 1px solid rgba(255,131,131,.2);
+    border-radius: 14px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.4);
+    overflow: hidden;
+    z-index: 200;
+    max-height: 380px;
+    display: flex;
+    flex-direction: column;
+}
 
     .notif-header {
         padding: .9rem 1.25rem;
@@ -213,24 +216,76 @@
             <div class="bandi-nav-divider"></div>
 
             <!-- Campana de notificaciones -->
-            <div style="position: relative;">
-                <button class="notif-btn" @click="notif = !notif" @click.outside="notif = false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                    </svg>
-                </button>
+<div style="position: relative;">
+    <button class="notif-btn" @click="notif = !notif" @click.outside="notif = false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+        </svg>
+        @php $unreadNotifs = auth()->user()->unreadNotifications->count(); @endphp
+        @if($unreadNotifs > 0)
+            <span style="position:absolute; top:2px; right:2px; width:8px; height:8px; background:var(--red); border-radius:50%; border:2px solid var(--dark);"></span>
+        @endif
+    </button>
 
-                <!-- Dropdown -->
-                <div class="notif-dropdown" x-show="notif" x-transition style="display:none;">
-                    <div class="notif-header">Notificaciones</div>
-                    <div class="notif-empty">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                        </svg>
-                        Sin notificaciones por ahora
-                    </div>
-                </div>
+    <!-- Dropdown -->
+    <div class="notif-dropdown" x-show="notif" x-transition style="display:none;">
+        <div class="notif-header">Notificaciones</div>
+        @php $notifications = auth()->user()->notifications()->latest()->take(10)->get(); @endphp
+        @if($notifications->isEmpty())
+            <div class="notif-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                </svg>
+                Sin notificaciones por ahora
             </div>
+        @else
+        <div style="overflow-y:auto; flex:1;">
+            @foreach($notifications as $notification)
+    <div style="display:flex; align-items:center; gap:.75rem; padding:.85rem 1.25rem; border-bottom:1px solid rgba(255,193,147,.08);
+                {{ $notification->read_at ? '' : 'background:rgba(255,55,55,.05);' }}">
+        @if($notification->data['follower_photo'])
+            <img src="{{ Storage::url($notification->data['follower_photo']) }}"
+                 style="width:36px; height:36px; border-radius:8px; object-fit:cover; flex-shrink:0; border:1.5px solid rgba(255,55,55,.3);">
+        @else
+            <div style="width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--orange),var(--red)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; color:#fff; flex-shrink:0; font-size:.9rem;">
+                {{ strtoupper(substr($notification->data['follower_username'], 0, 1)) }}
+            </div>
+        @endif
+        <div style="flex:1;">
+            <p style="color:var(--beige); font-size:.85rem; font-weight:600;">{{ $notification->data['follower_username'] }}</p>
+            <p style="color:var(--muted); font-size:.78rem; margin-bottom:.5rem;">te ha enviado una solicitud de seguimiento</p>
+            @php $follower = \App\Models\User::find($notification->data['follower_id']); @endphp
+            @if($follower)
+                <div style="display:flex; gap:.5rem;">
+                    <form method="POST" action="{{ route('follow.accept', $follower) }}">
+                        @csrf
+                        <button style="padding:.25rem .75rem; background:var(--red); color:#fff; border:none; border-radius:6px; font-size:.75rem; font-weight:600; cursor:pointer; transition:background .2s;"
+                                onmouseover="this.style.background='var(--salmon)'" onmouseout="this.style.background='var(--red)'">
+                            Aceptar
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ route('follow.reject', $follower) }}">
+                        @csrf
+                        <button style="padding:.25rem .75rem; background:transparent; color:var(--muted); border:1px solid rgba(255,193,147,.3); border-radius:6px; font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s;"
+                                onmouseover="this.style.borderColor='var(--salmon)';this.style.color='var(--salmon)'" onmouseout="this.style.borderColor='rgba(255,193,147,.3)';this.style.color='var(--muted)'">
+                            Rechazar
+                        </button>
+                    </form>
+                </div>
+            @endif
+            <p style="color:var(--muted); font-size:.72rem; margin-top:.35rem; opacity:.6;">{{ $notification->created_at->diffForHumans() }}</p>
+        </div>
+    </div>
+@endforeach
+</div>
+            <a href="#" onclick="markAllRead(event)"
+               style="display:block; text-align:center; padding:.75rem; color:var(--muted); font-size:.78rem; text-decoration:none; border-top:1px solid rgba(255,193,147,.08);"
+               onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">
+                Marcar todas como leídas
+            </a>
+        @endif
+    </div>
+</div>
 
             <!-- Icono de chat -->
 <div style="position: relative;">

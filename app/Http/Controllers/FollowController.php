@@ -5,31 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\NewFollower;
 
 class FollowController extends Controller
 {
     // Enviar solicitud de seguimiento
     public function send(User $user)
-    {
-        $me = Auth::user();
+{
+    $me = Auth::user();
 
-        if ($me->id === $user->id) {
-            return back();
-        }
-
-        // Si ya existe, no hacer nada
-        if (!$me->isFollowing($user)) {
-            $me->following()->attach($user->id, ['status' => 'pending']);
-        }
-
-        return back()->with('status', 'solicitud-enviada');
+    if ($me->id === $user->id) {
+        return back();
     }
+
+    if (!$me->isFollowing($user)) {
+        $me->following()->attach($user->id, ['status' => 'pending']);
+        
+        // Notificar al usuario que ha recibido una solicitud
+        $user->notify(new NewFollower($me));
+    }
+
+    return back()->with('status', 'solicitud-enviada');
+}
 
     // Aceptar solicitud
     public function accept(User $user)
 {
     Auth::user()->followers()
         ->updateExistingPivot($user->id, ['status' => 'accepted']);
+
+    // Marcar notificación como leída
+    Auth::user()->notifications()
+        ->where('data->follower_id', $user->id)
+        ->delete();
 
     return back()->with('status', 'solicitud-aceptada');
 }
@@ -61,8 +69,14 @@ class FollowController extends Controller
         return view('follows.requests', compact('requests'));
     }
     public function reject(User $user)
-    {
+{
     Auth::user()->followers()->detach($user->id);
+
+    // Marcar notificación como leída
+    Auth::user()->notifications()
+        ->where('data->follower_id', $user->id)
+        ->delete();
+
     return back();
-    }
+}
 }

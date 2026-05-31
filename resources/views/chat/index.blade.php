@@ -1,7 +1,7 @@
 <x-app-layout>
     <main class="max-w-3xl mx-auto px-6 py-10 w-full">
 
-        <h1 style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900; color:var(--beige); margin-bottom:1.5rem;">Mensajes</h1>
+        <h1 style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900; color:var(--dark); margin-bottom:1.5rem;">Chats</h1>
 
         @if($conversations->isEmpty())
             <div style="background:var(--mid); border-radius:16px; padding:3rem; text-align:center; border:1px solid rgba(255,193,147,.15); color:var(--muted);">
