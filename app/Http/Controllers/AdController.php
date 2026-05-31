@@ -104,6 +104,18 @@ class AdController extends Controller
 
         $application->update(['status' => $request->status]);
 
+        if ($request->status === 'accepted') {
+        $band   = auth()->user();
+        $musician = $application->user;
+
+        // Mensaje automático de bienvenida
+        $message = \App\Models\Message::create([
+            'sender_id'   => $band->id,
+            'receiver_id' => $musician->id,
+            'body'        => "¡Hola! Hemos aceptado tu solicitud para el anuncio \"{$ad->title}\". ¡Bienvenido al equipo!",
+        ]);
+        }
+
         // Notificar al músico
         $application->user->notify(new ApplicationStatusChanged($application));
 
