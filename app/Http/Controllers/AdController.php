@@ -51,14 +51,25 @@ class AdController extends Controller
     }
 
     public function index(): View
-    {
+{
+    $me = auth()->user();
+
+    if ($me && $me->account_type === 'band') {
+        // Primero los propios, luego el resto
+        $ads = Ad::with('user')
+            ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
+            ->orderByRaw('user_id = ? DESC', [$me->id])
+            ->latest()
+            ->paginate(10);
+    } else {
         $ads = Ad::with('user')
             ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
             ->latest()
             ->paginate(10);
-
-        return view('ads.index', compact('ads'));
     }
+
+    return view('ads.index', compact('ads'));
+}
 
     public function show(Ad $ad): View
     {

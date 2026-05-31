@@ -35,10 +35,17 @@
         @else
             <div style="display:flex; flex-direction:column; gap:1.25rem;">
                 @foreach($ads as $ad)
-                    <a href="{{ route('ads.show', $ad) }}"
-                       style="background:#2e1500; border-radius:20px; padding:1.5rem; border:1px solid rgba(255,193,147,.15); text-decoration:none; display:block; transition:border-color .2s, transform .2s;"
-                       onmouseover="this.style.borderColor='rgba(255,55,55,.4)'; this.style.transform='translateY(-2px)'"
-                       onmouseout="this.style.borderColor='rgba(255,193,147,.15)'; this.style.transform=''">
+    <a href="{{ route('ads.show', $ad) }}"
+       style="background:#2e1500; border-radius:20px; padding:1.5rem; border:1px solid {{ auth()->id() === $ad->user_id ? 'rgba(255,55,55,.4)' : 'rgba(255,193,147,.15)' }}; text-decoration:none; display:block; transition:border-color .2s, transform .2s;"
+       onmouseover="this.style.borderColor='rgba(255,55,55,.4)'; this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.borderColor='{{ auth()->id() === $ad->user_id ? 'rgba(255,55,55,.4)' : 'rgba(255,193,147,.15)' }}'; this.style.transform=''">
+
+        @if(auth()->id() === $ad->user_id)
+            <span style="display:inline-block; font-size:.72rem; font-weight:600; padding:.2rem .65rem; border-radius:999px; background:rgba(255,55,55,.1); color:#FF3737; border:1px solid rgba(255,55,55,.2); margin-bottom:.75rem;">
+                Tu anuncio
+            </span>
+        @endif
+
 
                         <!-- Título y cuerpo -->
                         <h2 style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:#FFEDCE; margin-bottom:.5rem;">
