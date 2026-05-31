@@ -33,26 +33,26 @@ class ChatController extends Controller
     {
         $me = Auth::user();
 
-        // Solo pueden chatear si se siguen mutuamente
+        // Solo pueden chatear si se siguen mutuamente o si se acepta un anuncio
         $canChat = $me->following()
-    ->wherePivot('status', 'accepted')
-    ->where('users.id', $user->id)
-    ->exists()
-    ||
-    $me->followers()
-    ->wherePivot('status', 'accepted')
-    ->where('users.id', $user->id)
-    ->exists();
-
-        if (!$canChat) {
-            abort(403);
-        }
-
-        $messages = Message::where(function ($q) use ($me, $user) {
-            $q->where('sender_id', $me->id)->where('receiver_id', $user->id);
-        })->orWhere(function ($q) use ($me, $user) {
-            $q->where('sender_id', $user->id)->where('receiver_id', $me->id);
-        })->orderBy('created_at')->get();
+        ->wherePivot('status', 'accepted')
+        ->where('users.id', $user->id)
+        ->exists()
+        ||
+        $me->followers()
+        ->wherePivot('status', 'accepted')
+        ->where('users.id', $user->id)
+        ->exists()
+        ||
+        \App\Models\Application::whereHas('ad', fn($q) => $q->where('user_id', $me->id))
+        ->where('user_id', $user->id)
+        ->where('status', 'accepted')
+        ->exists()
+        ||
+        \App\Models\Application::whereHas('ad', fn($q) => $q->where('user_id', $user->id))
+        ->where('user_id', $me->id)
+        ->where('status', 'accepted')
+        ->exists();
 
         // Marcar como leídos
         Message::where('sender_id', $user->id)
