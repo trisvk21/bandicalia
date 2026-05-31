@@ -65,9 +65,15 @@
                         @error('email') <p class="text-coral text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-white/70 mb-1">Ciudad</label>
-                        <input type="text" name="city" value="{{ old('city', $user->city) }}"
-                            class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
+                        <label class="block text-sm font-medium text-white/70 mb-1">Provincia</label>
+                        <select name="city"
+                            class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition">
+                            <option value="">Selecciona provincia...</option>
+                            @foreach(['Álava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria', 'Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Gerona', 'Granada', 'Guadalajara', 'Guipúzcoa', 'Huelva', 'Huesca', 'Islas Baleares', 'Jaén', 'La Coruña', 'La Rioja', 'Las Palmas', 'León', 'Lérida', 'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Orense', 'Palencia', 'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', 'Ceuta', 'Melilla'] as $provincia)
+                                <option value="{{ $provincia }}" {{ old('city', $user->city) === $provincia ? 'selected' : '' }}>{{ $provincia }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     @if($user->account_type === 'musician')
                     <div>
@@ -156,9 +162,9 @@
                     <div class="space-y-3">
                         @foreach($instruments as $instrument)
                             @php
-                                $pivot = $user->instruments->find($instrument->id);
-                                $checked = $pivot !== null;
-                                $level = $pivot ? $pivot->pivot->level : 1;
+        $pivot = $user->instruments->find($instrument->id);
+        $checked = $pivot !== null;
+        $level = $pivot ? $pivot->pivot->level : 1;
                             @endphp
                             <label
                                 class="flex items-center gap-4 p-3 rounded-xl border border-white/10 hover:border-white/20 cursor-pointer transition has-[:checked]:border-brand/40 has-[:checked]:bg-brand/5">

@@ -16,13 +16,20 @@
             class="bg-dark rounded-2xl px-7 py-5 grid grid-cols-1 md:grid-cols-5 gap-4 items-center border border-coral/15 shadow-2xl">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Nombre o usuario..."
                 class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm placeholder:text-muted focus:outline-none focus:border-peach w-full">
-            <input type="text" name="city" value="{{ request('city') }}" placeholder="Ciudad..."
-                class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm placeholder:text-muted focus:outline-none focus:border-peach w-full">
+            <select name="city"
+                class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm focus:outline-none focus:border-peach w-full">
+                <option value="">Todas las provincias</option>
+                @foreach(['Álava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria', 'Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Gerona', 'Granada', 'Guadalajara', 'Guipúzcoa', 'Huelva', 'Huesca', 'Islas Baleares', 'Jaén', 'La Coruña', 'La Rioja', 'Las Palmas', 'León', 'Lérida', 'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Orense', 'Palencia', 'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', 'Ceuta', 'Melilla'] as $provincia)
+                    <option value="{{ $provincia }}" {{ request('city') === $provincia ? 'selected' : '' }}>{{ $provincia }}
+                    </option>
+                @endforeach
+            </select>
             <select name="genre"
                 class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm focus:outline-none focus:border-peach w-full">
                 <option value="">Todos los géneros</option>
                 @foreach($genres as $genre)
-                    <option value="{{ $genre->id }}" {{ request('genre') == $genre->id ? 'selected' : '' }}>{{ $genre->name }}</option>
+                    <option value="{{ $genre->id }}" {{ request('genre') == $genre->id ? 'selected' : '' }}>{{ $genre->name }}
+                    </option>
                 @endforeach
             </select>
             <select name="instrument"
@@ -118,8 +125,8 @@
                         <div class="px-5 py-3 border-t border-peach/20 flex items-center justify-between">
                             <span class="text-xs font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1.5 tracking-wide
                                 {{ $musician->has_band
-                                    ? 'bg-green-500/10 text-green-700 border border-green-500/20'
-                                    : 'bg-peach/15 text-[#9a3a00] border border-peach/35' }}">
+            ? 'bg-green-500/10 text-green-700 border border-green-500/20'
+            : 'bg-peach/15 text-[#9a3a00] border border-peach/35' }}">
                                 @if($musician->has_band)
                                     <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                                     En banda

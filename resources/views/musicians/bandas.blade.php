@@ -16,13 +16,20 @@
             class="bg-dark rounded-2xl px-7 py-5 grid grid-cols-1 md:grid-cols-4 gap-4 items-center border border-coral/15 shadow-2xl">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Nombre de banda..."
                 class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm placeholder:text-muted focus:outline-none focus:border-peach w-full">
-            <input type="text" name="city" value="{{ request('city') }}" placeholder="Ciudad..."
-                class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm placeholder:text-muted focus:outline-none focus:border-peach w-full">
+            <select name="city"
+                class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm focus:outline-none focus:border-peach w-full">
+                <option value="">Todas las provincias</option>
+                @foreach(['Álava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria', 'Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Gerona', 'Granada', 'Guadalajara', 'Guipúzcoa', 'Huelva', 'Huesca', 'Islas Baleares', 'Jaén', 'La Coruña', 'La Rioja', 'Las Palmas', 'León', 'Lérida', 'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Orense', 'Palencia', 'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', 'Ceuta', 'Melilla'] as $provincia)
+                    <option value="{{ $provincia }}" {{ request('city') === $provincia ? 'selected' : '' }}>{{ $provincia }}
+                    </option>
+                @endforeach
+            </select>
             <select name="genre"
                 class="bg-darker border border-peach/20 rounded-xl px-4 py-2 text-cream text-sm focus:outline-none focus:border-peach w-full">
                 <option value="">Todos los géneros</option>
                 @foreach($genres as $genre)
-                    <option value="{{ $genre->id }}" {{ request('genre') == $genre->id ? 'selected' : '' }}>{{ $genre->name }}</option>
+                    <option value="{{ $genre->id }}" {{ request('genre') == $genre->id ? 'selected' : '' }}>{{ $genre->name }}
+                    </option>
                 @endforeach
             </select>
             <button type="submit"
