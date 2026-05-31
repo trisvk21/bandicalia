@@ -248,17 +248,17 @@
                   {{ $notification->read_at ? '' : 'background:rgba(255,55,55,.05);' }}"
            onmouseover="this.style.background='rgba(255,193,147,.07)'"
            onmouseout="this.style.background='{{ $notification->read_at ? 'transparent' : 'rgba(255,55,55,.05)' }}'">
-            @if($notification->data['band_photo'])
+            @if(($notification->data['band_photo'] ?? null))
                 <img src="{{ Storage::url($notification->data['band_photo']) }}"
                      style="width:36px; height:36px; border-radius:8px; object-fit:cover; flex-shrink:0; border:1.5px solid rgba(255,55,55,.3);">
             @else
                 <div style="width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--orange),var(--red)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; color:#fff; flex-shrink:0; font-size:.9rem;">
-                    {{ strtoupper(substr($notification->data['band_username'], 0, 1)) }}
+                    {{ strtoupper(substr($notification->data['band_username'] ?? 'B', 0, 1)) }}
                 </div>
             @endif
             <div>
-                <p style="color:var(--beige); font-size:.85rem; font-weight:600;">{{ $notification->data['band_username'] }}</p>
-                <p style="color:var(--muted); font-size:.78rem;">ha publicado: {{ $notification->data['ad_title'] }}</p>
+                <p style="color:var(--beige); font-size:.85rem; font-weight:600;">{{ $notification->data['band_username'] ?? '' }}</p>
+                <p style="color:var(--muted); font-size:.78rem;">ha publicado: {{ $notification->data['ad_title'] ?? '' }}</p>
                 <p style="color:var(--muted); font-size:.72rem; margin-top:.15rem; opacity:.6;">{{ $notification->created_at->diffForHumans() }}</p>
             </div>
         </a>
