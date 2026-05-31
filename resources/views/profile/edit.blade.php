@@ -149,33 +149,36 @@
                 </div>
             </div>
 
-            <!-- Instrumentos -->
-            <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
-                <h2 class="font-serif text-lg font-bold text-cream">Instrumentos</h2>
-                <div class="space-y-3">
-                    @foreach($instruments as $instrument)
-                        @php
-                            $pivot = $user->instruments->find($instrument->id);
-                            $checked = $pivot !== null;
-                            $level = $pivot ? $pivot->pivot->level : 1;
-                        @endphp
-                        <label class="flex items-center gap-4 p-3 rounded-xl border border-white/10 hover:border-white/20 cursor-pointer transition has-[:checked]:border-brand/40 has-[:checked]:bg-brand/5">
-                            <input type="checkbox" name="instrument_ids[]" value="{{ $instrument->id }}"
-                                class="instrument-checkbox w-4 h-4 accent-brand" {{ $checked ? 'checked' : '' }}
-                                data-id="{{ $instrument->id }}">
-                            <span class="text-cream text-sm flex-1">{{ $instrument->name }}</span>
-                            <select name="instruments[{{ $instrument->id }}]"
-                                class="instrument-level {{ $checked ? '' : 'hidden' }} px-3 py-1 rounded-lg bg-darker border border-white/20 text-white/70 text-sm focus:outline-none focus:border-brand transition">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <option value="{{ $i }}" {{ $level == $i ? 'selected' : '' }}>
-                                        {{ ['', 'Principiante', 'Básico', 'Intermedio', 'Avanzado', 'Profesional'][$i] }}
-                                    </option>
-                                @endfor
-                            </select>
-                        </label>
-                    @endforeach
+            @if($user->account_type === 'musician')
+                <!-- Instrumentos -->
+                <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
+                    <h2 class="font-serif text-lg font-bold text-cream">Instrumentos</h2>
+                    <div class="space-y-3">
+                        @foreach($instruments as $instrument)
+                            @php
+                                $pivot = $user->instruments->find($instrument->id);
+                                $checked = $pivot !== null;
+                                $level = $pivot ? $pivot->pivot->level : 1;
+                            @endphp
+                            <label
+                                class="flex items-center gap-4 p-3 rounded-xl border border-white/10 hover:border-white/20 cursor-pointer transition has-[:checked]:border-brand/40 has-[:checked]:bg-brand/5">
+                                <input type="checkbox" name="instrument_ids[]" value="{{ $instrument->id }}"
+                                    class="instrument-checkbox w-4 h-4 accent-brand" {{ $checked ? 'checked' : '' }}
+                                    data-id="{{ $instrument->id }}">
+                                <span class="text-cream text-sm flex-1">{{ $instrument->name }}</span>
+                                <select name="instruments[{{ $instrument->id }}]"
+                                    class="instrument-level {{ $checked ? '' : 'hidden' }} px-3 py-1 rounded-lg bg-darker border border-white/20 text-white/70 text-sm focus:outline-none focus:border-brand transition">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <option value="{{ $i }}" {{ $level == $i ? 'selected' : '' }}>
+                                            {{ ['', 'Principiante', 'Básico', 'Intermedio', 'Avanzado', 'Profesional'][$i] }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
 
             <!-- Anuncios (solo bandas) -->
             @if($user->account_type === 'band')
