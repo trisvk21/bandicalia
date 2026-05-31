@@ -57,19 +57,35 @@ class ProfileController extends Controller
     'photo'          => 'nullable|image|max:2048',
     'soundcloud_url' => 'nullable|url|max:255',
     'spotify_url'    => 'nullable|url|max:255',
+    'banner'         => 'nullable|image|max:4096',
+    'youtube_url'    => 'nullable|string|max:255',
 ]);
 
         // Foto de perfil
         if ($request->hasFile('photo')) {
-            if ($user->photo) Storage::delete($user->photo);
+            if ($user->photo)
+                Storage::delete($user->photo);
             $user->photo = $request->file('photo')->store('photos', 'public');
         }
 
+        if ($request->hasFile('banner')) {
+            if ($user->banner)
+                Storage::delete($user->banner);
+            $user->banner = $request->file('banner')->store('banners', 'public');
+        }
+
         $user->update($request->only([
-    'username', 'full_name', 'email',
-    'city', 'age', 'general_level', 'bio',
-    'soundcloud_url', 'spotify_url'
-]));
+            'username',
+            'full_name',
+            'email',
+            'city',
+            'age',
+            'general_level',
+            'bio',
+            'soundcloud_url',
+            'spotify_url',
+            'youtube_url'
+        ]));
 
         $user->has_band = $request->boolean('has_band');
         $user->save();
@@ -84,6 +100,6 @@ class ProfileController extends Controller
         }
         $user->instruments()->sync($instrumentsSync);
 
-        return redirect()->route('home')->with('status', 'profile-updated');
+        return redirect()->route('profile.show', Auth::user()->username)->with('status', 'profile-updated');
     }
 }

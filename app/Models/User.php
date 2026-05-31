@@ -19,14 +19,16 @@ class User extends Authenticatable
         'username',
         'full_name',
         'photo',
+        'banner',
         'city',
         'general_level',
         'bio',
         'age',
         'has_band',
-        'account_type',
         'soundcloud_url',
         'spotify_url',
+        'youtube_url',
+        'account_type',
     ];
 
     protected $hidden = [

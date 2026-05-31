@@ -115,11 +115,23 @@
                         <img src="{{ Storage::url($user->photo) }}" class="w-20 h-20 rounded-xl object-cover mb-3 border-2 border-brand/30">
                     @endif
                     <input type="file" name="photo" accept="image/*" class="text-white/50 text-sm" />
-                </div>
-            </div>
-
-            <!-- Redes sociales -->
-            <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
+                    </div>
+                    
+                    @if($user->account_type === 'band')
+                        <div>
+                            <label class="block text-sm font-medium text-white/70 mb-2">Banner de perfil</label>
+                            @if($user->banner)
+                                <img src="{{ Storage::url($user->banner) }}"
+                                    class="w-full h-24 rounded-xl object-cover mb-3 border border-brand/30">
+                            @endif
+                            <input type="file" name="banner" accept="image/*" class="text-white/50 text-sm" />
+                            <p class="text-white/30 text-xs mt-1">Recomendado: imagen horizontal (1200x300px)</p>
+                        </div>
+                    @endif
+                    </div>
+                    
+                    <!-- Redes sociales -->
+                    <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
                 <h2 class="font-serif text-lg font-bold text-cream">Redes y música</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -128,16 +140,25 @@
                             placeholder="https://soundcloud.com/tu-perfil"
                             class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
                         @error('soundcloud_url') <p class="text-coral text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-white/70 mb-1">Spotify URL</label>
-                        <input type="url" name="spotify_url" value="{{ old('spotify_url', $user->spotify_url) }}"
-                            placeholder="https://open.spotify.com/artist/..."
-                            class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
-                        @error('spotify_url') <p class="text-coral text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                </div>
-            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-white/70 mb-1">Spotify URL</label>
+                            <input type="url" name="spotify_url" value="{{ old('spotify_url', $user->spotify_url) }}"
+                                placeholder="https://open.spotify.com/artist/..."
+                                class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
+                            @error('spotify_url') <p class="text-coral text-sm mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        @if($user->account_type === 'musician')
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-white/70 mb-1">YouTube URL</label>
+                                <input type="text" name="youtube_url" value="{{ old('youtube_url', $user->youtube_url) }}"
+                                    placeholder="https://www.youtube.com/watch?v=..."
+                                    class="w-full px-4 py-3 rounded-xl bg-darker border border-white/10 text-cream placeholder-white/30 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition" />
+                                @error('youtube_url') <p class="text-coral text-sm mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
+                        </div>
+                        </div>
 
             <!-- Géneros -->
             <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
@@ -186,7 +207,6 @@
                 </div>
             @endif
 
-            <!-- Anuncios (solo bandas) -->
             <!-- Anuncios (solo bandas) -->
             @if($user->account_type === 'band')
                 <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
