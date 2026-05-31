@@ -116,7 +116,7 @@ document.addEventListener('click', function(e) {
                                 
                                 <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem; font-size:.85rem; color:var(--muted);">
                                     @if($user->city)
-                                        <span>📍 {{ $user->city }}</span>
+                                        <span>{{ $user->city }}</span>
                                     @endif
                                     @if($user->age)
                                         <span>{{ $user->age }} años</span>
