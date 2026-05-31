@@ -325,5 +325,40 @@
         </div>
     @endif
 @endauth
+{{-- Anuncios de la banda --}}
+@if($user->account_type === 'band')
+    @php $bandAds = $user->ads()->latest()->get(); @endphp
+    <div style="background:var(--mid); border-radius:16px; padding:1.5rem; border:1px solid rgba(255,193,147,.15); margin-top:1.5rem;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+            <h2 style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--beige);">
+                Anuncios ({{ $bandAds->count() }})
+            </h2>
+            @auth
+                @if(auth()->id() === $user->id)
+                    <a href="{{ route('ads.create') }}"
+                       style="padding:.3rem .9rem; background:var(--red); color:#fff; border-radius:8px; font-size:.78rem; font-weight:600; text-decoration:none; transition:background .2s;"
+                       onmouseover="this.style.background='var(--salmon)'" onmouseout="this.style.background='var(--red)'">
+                        + Nuevo
+                    </a>
+                @endif
+            @endauth
+        </div>
+        @if($bandAds->isEmpty())
+            <p style="color:rgba(255,237,206,.3); font-size:.85rem;">No hay anuncios publicados todavía.</p>
+        @else
+            <div style="display:flex; flex-direction:column; gap:.75rem; max-height:320px; overflow-y:auto; padding-right:.25rem;">
+                @foreach($bandAds as $ad)
+                    <a href="{{ route('ads.show', $ad) }}"
+                       style="display:block; padding:1rem 1.25rem; background:rgba(255,255,255,.04); border-radius:12px; border:1px solid rgba(255,193,147,.1); text-decoration:none; transition:border-color .2s;"
+                       onmouseover="this.style.borderColor='rgba(255,55,55,.35)'" onmouseout="this.style.borderColor='rgba(255,193,147,.1)'">
+                        <p style="font-family:'Playfair Display',serif; font-weight:700; color:var(--beige); font-size:.95rem; margin-bottom:.35rem;">{{ $ad->title }}</p>
+                        <p style="color:rgba(255,237,206,.45); font-size:.82rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ $ad->body }}</p>
+                        <p style="color:var(--muted); font-size:.72rem; margin-top:.5rem;">{{ $ad->created_at->diffForHumans() }}</p>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    </div>
+@endif
     </main>
 </x-app-layout>

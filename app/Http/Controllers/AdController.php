@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Ad;
 use App\Models\Application;
 use App\Notifications\ApplicationStatusChanged;
+use App\Notifications\NewBandAd;
+use App\Notifications\NewApplication;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use App\Notifications\NewBandAd;
 
 class AdController extends Controller
 {
@@ -18,30 +19,29 @@ class AdController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-{
-    $request->validate([
-        'title' => ['required', 'string', 'max:100'],
-        'body'  => ['required', 'string', 'max:1000'],
-    ]);
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:100'],
+            'body'  => ['required', 'string', 'max:1000'],
+        ]);
 
-    $ad = $request->user()->ads()->create([
-        'title' => $request->input('title'),
-        'body'  => $request->input('body'),
-    ]);
+        $ad = $request->user()->ads()->create([
+            'title' => $request->input('title'),
+            'body'  => $request->input('body'),
+        ]);
 
-    $ad->load('user');
+        $ad->load('user');
 
-    // Notificar a todos los seguidores de la banda
-    $followers = $request->user()->followers()
-        ->wherePivot('status', 'accepted')
-        ->get();
+        $followers = $request->user()->followers()
+            ->wherePivot('status', 'accepted')
+            ->get();
 
-    foreach ($followers as $follower) {
-        $follower->notify(new NewBandAd($ad));
+        foreach ($followers as $follower) {
+            $follower->notify(new NewBandAd($ad));
+        }
+
+        return redirect()->route('ads.index')->with('status', 'ad-created');
     }
-
-    return redirect()->route('ads.index')->with('status', 'ad-created');
-}
 
     public function destroy(Ad $ad): RedirectResponse
     {
@@ -51,25 +51,24 @@ class AdController extends Controller
     }
 
     public function index(): View
-{
-    $me = auth()->user();
+    {
+        $me = auth()->user();
 
-    if ($me && $me->account_type === 'band') {
-        // Primero los propios, luego el resto
-        $ads = Ad::with('user')
-            ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
-            ->orderByRaw('user_id = ? DESC', [$me->id])
-            ->latest()
-            ->paginate(10);
-    } else {
-        $ads = Ad::with('user')
-            ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
-            ->latest()
-            ->paginate(10);
+        if ($me && $me->account_type === 'band') {
+            $ads = Ad::with('user')
+                ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
+                ->orderByRaw('user_id = ? DESC', [$me->id])
+                ->latest()
+                ->paginate(10);
+        } else {
+            $ads = Ad::with('user')
+                ->whereHas('user', fn($q) => $q->where('account_type', 'band'))
+                ->latest()
+                ->paginate(10);
+        }
+
+        return view('ads.index', compact('ads'));
     }
-
-    return view('ads.index', compact('ads'));
-}
 
     public function show(Ad $ad): View
     {
@@ -98,11 +97,15 @@ class AdController extends Controller
             'message' => ['required', 'string', 'max:1000'],
         ]);
 
-        Application::create([
+        $application = Application::create([
             'ad_id'   => $ad->id,
             'user_id' => auth()->id(),
             'message' => $request->input('message'),
         ]);
+
+        $application->load('user', 'ad');
+
+        $ad->user->notify(new NewApplication($application));
 
         return back()->with('success', '¡Solicitud enviada correctamente!');
     }
@@ -128,20 +131,20 @@ class AdController extends Controller
         $application->update(['status' => $request->status]);
 
         if ($request->status === 'accepted') {
-    $band = auth()->user();
-    $musician = $application->user;
+            $band = auth()->user();
+            $musician = $application->user;
 
-    \App\Models\Message::create([
-        'sender_id'   => $band->id,
-        'receiver_id' => $musician->id,
-        'body'        => "¡Hola! Hemos aceptado tu solicitud para el anuncio \"{$ad->title}\". ¡Bienvenido al equipo!",
-    ]);
+            \App\Models\Message::create([
+                'sender_id'   => $band->id,
+                'receiver_id' => $musician->id,
+                'body'        => "¡Hola! Hemos aceptado tu solicitud para el anuncio \"{$ad->title}\". ¡Bienvenido al equipo!",
+            ]);
 
-    $application->user->notify(new ApplicationStatusChanged($application));
+            $application->user->notify(new ApplicationStatusChanged($application));
 
-    return redirect()->route('chat.show', $musician)->with('success', 'Solicitud aceptada.');
-}
-        // Notificar al músico
+            return redirect()->route('chat.show', $musician)->with('success', 'Solicitud aceptada.');
+        }
+
         $application->user->notify(new ApplicationStatusChanged($application));
 
         $msg = $request->status === 'accepted' ? 'Solicitud aceptada.' : 'Solicitud rechazada.';
