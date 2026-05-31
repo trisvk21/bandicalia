@@ -47,15 +47,17 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'username'      => 'required|string|max:255|unique:users,username,' . $user->id,
-            'full_name'     => 'nullable|string|max:255',
-            'email'         => 'required|email|unique:users,email,' . $user->id,
-            'city'          => 'nullable|string|max:255',
-            'age'           => 'nullable|integer|min:14|max:100',
-            'general_level' => 'nullable|integer|between:1,5',
-            'bio'           => 'nullable|string',
-            'photo'         => 'nullable|image|max:2048',
-        ]);
+    'username'       => 'required|string|max:255|unique:users,username,' . $user->id,
+    'full_name'      => 'nullable|string|max:255',
+    'email'          => 'required|email|unique:users,email,' . $user->id,
+    'city'           => 'nullable|string|max:255',
+    'age'            => 'nullable|integer|min:14|max:100',
+    'general_level'  => 'nullable|integer|between:1,5',
+    'bio'            => 'nullable|string',
+    'photo'          => 'nullable|image|max:2048',
+    'soundcloud_url' => 'nullable|url|max:255',
+    'spotify_url'    => 'nullable|url|max:255',
+]);
 
         // Foto de perfil
         if ($request->hasFile('photo')) {
@@ -64,9 +66,10 @@ class ProfileController extends Controller
         }
 
         $user->update($request->only([
-            'username', 'full_name', 'email',
-            'city', 'age', 'general_level', 'bio'
-        ]));
+    'username', 'full_name', 'email',
+    'city', 'age', 'general_level', 'bio',
+    'soundcloud_url', 'spotify_url'
+]));
 
         $user->has_band = $request->boolean('has_band');
         $user->save();
@@ -81,7 +84,6 @@ class ProfileController extends Controller
         }
         $user->instruments()->sync($instrumentsSync);
 
-        return redirect()->route('profile.show', Auth::user()->username)
-        ->with('status', 'profile-updated');
+        return redirect()->route('home')->with('status', 'profile-updated');
     }
 }

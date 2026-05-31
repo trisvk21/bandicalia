@@ -28,7 +28,7 @@ class AdController extends Controller
             'body'  => $request->input('body'),
         ]);
 
-        return redirect()->route('profile.edit')->with('status', 'ad-created');
+        return redirect()->route('ads.index')->with('status', 'ad-created');
     }
 
     public function destroy(Ad $ad): RedirectResponse

@@ -54,13 +54,19 @@ class ChatController extends Controller
         ->where('status', 'accepted')
         ->exists();
 
-        // Marcar como leídos
-        Message::where('sender_id', $user->id)
-            ->where('receiver_id', $me->id)
-            ->where('read', false)
-            ->update(['read' => true]);
+        $messages = Message::where(function ($q) use ($me, $user) {
+    $q->where('sender_id', $me->id)->where('receiver_id', $user->id);
+})->orWhere(function ($q) use ($me, $user) {
+    $q->where('sender_id', $user->id)->where('receiver_id', $me->id);
+})->orderBy('created_at')->get();
 
-        return view('chat.show', compact('user', 'messages'));
+// Marcar como leídos
+Message::where('sender_id', $user->id)
+    ->where('receiver_id', $me->id)
+    ->where('read', false)
+    ->update(['read' => true]);
+
+return view('chat.show', compact('user', 'messages'));
     }
 
     // Enviar mensaje
