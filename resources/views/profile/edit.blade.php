@@ -35,7 +35,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-6">
+        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-6" novalidate>
             @csrf
             @method('PATCH')
             <input type="hidden" name="name" value="{{ $user->name }}">
@@ -187,38 +187,31 @@
             @endif
 
             <!-- Anuncios (solo bandas) -->
+            <!-- Anuncios (solo bandas) -->
             @if($user->account_type === 'band')
-            <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-serif text-lg font-bold text-cream">Anuncios</h2>
-                    <a href="{{ route('ads.create') }}"
-                       class="px-4 py-2 bg-brand hover:bg-coral text-white text-sm font-semibold rounded-xl transition">
-                        + Nuevo anuncio
-                    </a>
-                </div>
-                @if($user->ads->isEmpty())
-                    <p class="text-white/30 text-sm">No hay anuncios publicados todavía.</p>
-                @else
-                    <div class="space-y-3">
-                        @foreach($user->ads as $ad)
-                        <div class="bg-darker rounded-xl p-4 flex justify-between items-start gap-4 border border-white/10">
-                            <div>
-                                <p class="font-semibold text-cream text-sm">{{ $ad->title }}</p>
-                                <p class="text-white/50 text-sm mt-1">{{ $ad->body }}</p>
-                                <p class="text-white/20 text-xs mt-2">{{ $ad->created_at->diffForHumans() }}</p>
-                            </div>
-                            <form method="POST" action="{{ route('ads.destroy', $ad) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-coral hover:text-brand text-sm transition">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </div>
-                        @endforeach
+                <div class="bg-dark rounded-2xl p-6 border border-white/10 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="font-serif text-lg font-bold text-cream">Anuncios</h2>
                     </div>
-                @endif
-            </div>
+                    @if($user->ads->isEmpty())
+                        <p class="text-white/30 text-sm">No hay anuncios publicados todavía.</p>
+                    @else
+                        <div class="space-y-3">
+                            @foreach($user->ads as $ad)
+                                <div class="bg-darker rounded-xl p-4 flex justify-between items-start gap-4 border border-white/10">
+                                    <div>
+                                        <p class="font-semibold text-cream text-sm">{{ $ad->title }}</p>
+                                        <p class="text-white/50 text-sm mt-1">{{ $ad->body }}</p>
+                                        <p class="text-white/20 text-xs mt-2">{{ $ad->created_at->diffForHumans() }}</p>
+                                    </div>
+                                    <button type="submit" form="delete-ad-{{ $ad->id }}" class="text-coral hover:text-brand text-sm transition">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
             @endif
 
             <div class="flex gap-4 pb-6">
@@ -231,6 +224,7 @@
                     Guardar cambios
                 </button>
             </div>
+            
         </form>
     </main>
 

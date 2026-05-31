@@ -102,22 +102,32 @@
                     @endif
 
                     @if($user->soundcloud_url || $user->spotify_url)
-                        <div style="display:flex; gap:.75rem; margin-top:1rem;">
+                        <div style="display:flex; gap:.75rem; margin-top:1.25rem; flex-wrap:wrap;">
                             @if($user->soundcloud_url)
                                 <a href="{{ $user->soundcloud_url }}" target="_blank"
-                                   style="padding:.35rem 1rem; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,193,147,.2); color:var(--muted); font-size:.8rem; text-decoration:none; transition:border-color .2s;"
-                                   onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='rgba(255,193,147,.2)'">
+                                    style="display:inline-flex; align-items:center; gap:.6rem; padding:.65rem 1.25rem; border-radius:12px; background:#ff5500; color:#fff; font-size:.88rem; font-weight:600; text-decoration:none; transition:all .2s; box-shadow:0 4px 12px rgba(255,85,0,.3);"
+                                    onmouseover="this.style.background='#ff7733';this.style.transform='translateY(-2px)'"
+                                    onmouseout="this.style.background='#ff5500';this.style.transform=''">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.05-.1-.1-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.172 1.308c.013.06.045.094.104.094s.09-.04.104-.1l.195-1.308-.195-1.332c-.014-.057-.045-.09-.105-.09m1.81-.7c-.07 0-.12.05-.127.12l-.214 2.006.214 1.922c.007.07.057.12.127.12.068 0 .117-.05.124-.12l.244-1.922-.244-2.006c-.007-.07-.056-.12-.124-.12m.896-.21c-.08 0-.14.063-.145.143l-.197 2.216.197 2.07c.005.08.065.14.145.14s.14-.06.146-.14l.224-2.07-.224-2.216c-.006-.08-.066-.143-.146-.143m.907-.13c-.09 0-.16.07-.166.163l-.18 2.346.18 2.19c.006.09.076.16.166.16.09 0 .16-.07.166-.16l.205-2.19-.205-2.346c-.006-.093-.076-.163-.166-.163m.91-.07c-.1 0-.178.08-.184.18l-.163 2.416.163 2.3c.006.1.084.18.184.18s.178-.08.184-.18l.185-2.3-.185-2.416c-.006-.1-.084-.18-.184-.18m.916-.04c-.11 0-.197.09-.2.2l-.148 2.456.148 2.4c.003.11.09.2.2.2.11 0 .196-.09.2-.2l.167-2.4-.167-2.456c-.004-.11-.09-.2-.2-.2m.92.01c-.12 0-.213.095-.216.216l-.132 2.446.132 2.49c.003.12.096.216.216.216.12 0 .213-.096.217-.216l.15-2.49-.15-2.446c-.004-.12-.097-.216-.217-.216m.927.07c-.13 0-.232.104-.234.234l-.116 2.376.116 2.56c.002.13.104.234.234.234.13 0 .232-.104.235-.234l.132-2.56-.132-2.376c-.003-.13-.105-.234-.235-.234m3.977-1.763c-.267 0-.52.055-.75.153C9.616 8.265 8.78 7.2 7.68 7.2c-.31 0-.6.08-.856.216-.092.05-.117.1-.12.15v7.354c.003.057.05.1.107.107h5.776c.057-.007.104-.05.107-.107.002-.015.003-.03.003-.045V12.6c0-1.314-1.064-2.38-2.377-2.38" />
+                                    </svg>
                                     SoundCloud
                                 </a>
                             @endif
                             @if($user->spotify_url)
                                 <a href="{{ $user->spotify_url }}" target="_blank"
-                                   style="padding:.35rem 1rem; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,193,147,.2); color:var(--muted); font-size:.8rem; text-decoration:none; transition:border-color .2s;"
-                                   onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='rgba(255,193,147,.2)'">
+                                    style="display:inline-flex; align-items:center; gap:.6rem; padding:.65rem 1.25rem; border-radius:12px; background:#1db954; color:#fff; font-size:.88rem; font-weight:600; text-decoration:none; transition:all .2s; box-shadow:0 4px 12px rgba(29,185,84,.3);"
+                                    onmouseover="this.style.background='#1ed760';this.style.transform='translateY(-2px)'"
+                                    onmouseout="this.style.background='#1db954';this.style.transform=''">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                                    </svg>
                                     Spotify
                                 </a>
                             @endif
-                        </div>
+                            </div>
                     @endif
                 </div>
             </div>
@@ -204,9 +214,9 @@
 @auth
     @if(auth()->id() === $user->id)
         @php
-            $following = $user->following()->wherePivot('status', 'accepted')->get();
-            $followingMusicians = $following->where('account_type', 'musician');
-            $followingBands = $following->where('account_type', 'band');
+        $following = $user->following()->wherePivot('status', 'accepted')->get();
+        $followingMusicians = $following->where('account_type', 'musician');
+        $followingBands = $following->where('account_type', 'band');
         @endphp
         <div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
             <h2 class="font-serif text-lg font-bold text-cream mb-4">
@@ -267,9 +277,9 @@
 @auth
     @if(auth()->id() === $user->id)
         @php
-            $followers = $user->followers()->wherePivot('status', 'accepted')->get();
-            $followerMusicians = $followers->where('account_type', 'musician');
-            $followerBands = $followers->where('account_type', 'band');
+        $followers = $user->followers()->wherePivot('status', 'accepted')->get();
+        $followerMusicians = $followers->where('account_type', 'musician');
+        $followerBands = $followers->where('account_type', 'band');
         @endphp
         <div class="bg-dark rounded-2xl p-6 border border-white/10 mt-6">
             <h2 class="font-serif text-lg font-bold text-cream mb-4">
